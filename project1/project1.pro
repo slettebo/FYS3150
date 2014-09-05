@@ -6,3 +6,7 @@ CONFIG -= qt
 SOURCES += main.cpp
 
 LIBS += -llapack -lblas -larmadillo
+
+OTHER_FILES += \
+    exec_cmd.py \
+    plot.py
