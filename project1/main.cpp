@@ -10,22 +10,12 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     // declaration of constants and variables
-    cout << argc << endl;
-    cout << argv << endl;
-
     int i;
     int n = 10;
     double constant;
     double h = 1./(n+1);
     clock_t start, finish; //timing variables: start and finish time
     double duration;
-
-
-    // tridiagonal matrix
-    mat A = zeros(n,n);
-    A.diag() += 2;
-    A.diag(1) += -1;
-    A.diag(-1) += -1;
 
     // array representation of the tridiagonal matrix
     vec b = 2*ones(n+2);  // main diagonal elements
@@ -46,6 +36,32 @@ int main(int argc, char *argv[])
     vec d = f*h*h;              // vector d in equation: Av=d
     d(0) = d(n+1) = 0;          // boundary conditions (not included in the 'matrix')
     vec u = 1 - (1-exp(-10))*x - exp(-10*x);    // analytical solution
+
+
+
+
+    // ARMADILLO: LU decomposition
+    // NOT FULLY OPERATIONAL ->
+
+    // tridiagonal matrix
+    mat A = zeros(n,n);
+    A.diag() += 2;
+    A.diag(1) += -1;
+    A.diag(-1) += -1;
+
+    // solving the linear sets of equations:
+    mat L, U, P;
+    lu(L,U,P,A);
+    mat z;
+    vec y, p;
+    y = linspace(0,1,n);
+    p = 100*exp(-10*y)*h*h;
+    z = solve(trimatu(U), solve(trimatl(L), P*p));
+
+    //mat B = P.t()*L*U;
+    cout << z << endl;
+    // <- NOT FULLY OPERATIONAL
+
 
 
     // STARTING TIMER:
@@ -71,11 +87,11 @@ int main(int argc, char *argv[])
     // STOPPING TIMER
     finish = clock();
 
+    // Calculating and printing execution time
     duration = ( (finish - start)/ (double) CLOCKS_PER_SEC);
-    //cout << start << "\n" << finish << "\n" << ( (finish - start)/CLOCKS_PER_SEC) << endl;
     cout << "Execution time: " << duration << " seconds." << endl;
 
-    // compute relative error:
+    // computing relative error:
     vec relative_error = zeros(n); // declaring array for storing relative error
     for (i=1; i<n+1; i++) // not computing rel. err. for u(0) -> divide by zero
     {
@@ -83,11 +99,11 @@ int main(int argc, char *argv[])
     }
     cout << "Maximum relative error: " << max(relative_error) << endl;
 
-
+    cout << v << endl;
     // writing solution array to file for plotting in python:
     char *filename = new char[1000];
     sprintf(filename, "u_numerical_solution_%d.dat",n);
     v.save(filename, raw_ascii);
 
-
+    return 0;
 }
