@@ -9,4 +9,7 @@ LIBS += -llapack -lblas -larmadillo
 
 OTHER_FILES += \
     exec_cmd.py \
-    plot.py
+    plot.py \
+    rapport.tex \
+    plot_numerical_analytical.py \
+    plot_rel_error.py
