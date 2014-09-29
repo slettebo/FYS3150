@@ -100,8 +100,8 @@ void jacobiRotation(mat &A, mat &R, int k, int l, int N)
 
 int main()
 {
-    int n = 5;
-    vec N_array = linspace(100,500,n);
+    int n = 4;
+    //vec N_array = linspace(100,500,n);
 
     vec omega_array = zeros(n);
     omega_array(0) = 0.01;
@@ -109,12 +109,13 @@ int main()
     omega_array(2) = 1.0;
     omega_array(3) = 5.0;
 
+    /*
     vec rho_max_array = zeros(4);
     rho_max_array(0) = 40.0;
     rho_max_array(1) = 5.0;
     rho_max_array(2) = 3.5;
     rho_max_array(3) = 1.5;
-
+    */
 
     mat benchmark = zeros(n,3); // storing duration of eigenvalue finders, and number of similarity transforms
     int i;
@@ -122,13 +123,13 @@ int main()
     {
         // declaration of constants and variables
         int counter = 0;            // for counting number of similarity transforms
-        int N;
-        N = N_array(i);                 // number of steps (also size of matrix (NxN)).
+        int N = 400;                // number of steps (also size of matrix (NxN)).
         int rho_min = 0;
-        //double omega = omega_array(i);
+        double omega = omega_array(i);
+        //double omega = 1./20;         // for comparison with analytical result
         //double rho_max = 4.39;        // best rho_max for no coloumb interaction
-        double rho_max = 40;        // best rho_max for omega=0.25
-        double tolerance = 1e-10;                 // defining "zero" value (maximum off-diagonal element size in mat A)
+        double rho_max = 40;            // close to minimum required rho_max for omega=0.01
+        double tolerance = 1e-3;                 // defining "zero" value (maximum off-diagonal element size in mat A)
         double h = (rho_max - rho_min)/(N + 1);   // step size
         vec rho_array = linspace(rho_min+h,rho_max-h,N); // creating an array of equally spaced rhos
 
@@ -144,8 +145,8 @@ int main()
         mat A = zeros(N,N);                 // declaring matrix A
         vec e = (-1./(h*h))*ones(N-1);      // non-diagonal elements = constant
         vec V1 = rho_array%rho_array;       // V1 = single electron in harmonic oscillator. Computing V_i = rho_i**2
-        //vec V2 = (rho_array%rho_array)*(omega*omega) + 1./rho_array; // V2 = two electrons potential.
-        A.diag() = 2./(h*h) + V1;           // setting main diagonal elements
+        vec V2 = (rho_array%rho_array)*(omega*omega) + 1./rho_array; // V2 = two electrons potential.
+        A.diag() = 2./(h*h) + V2;           // setting main diagonal elements
         A.diag(1) = e;                      // off-diagonal elements (above diag.) = e
         A.diag(-1) = e;                     // off-diagonal elements (below diag.) = e
         mat R = eye(N,N);                   // eigenvector matrix
@@ -163,8 +164,6 @@ int main()
         // CREATING DUPLICATE MATRIX FOR COMPARISON WITH ARMADILLO'S EIGENVALUE SOLVER
         // (SINCE MY PROGRAM ALTERS THE MATRIX A)
         mat C = A;  // copy of the original matrix A
-
-
 
 
         // STARTING TIMER: JACOBI ROTATION
@@ -239,41 +238,38 @@ int main()
 
         // WRITING RESULTS TO FILE FOR PLOTTING IN PYTHON:
         char *A_filename = new char[1000];
-        sprintf(A_filename, "armadillo_eigvec_%d.dat",N);
+        sprintf(A_filename, "armadillo_eigvec_%d.dat",i);
         armadillo_eigvec.save(A_filename, raw_ascii);
 
         char *A_filename1 = new char[1000];
-        sprintf(A_filename1, "armadillo_eigval_%d.dat",N);
+        sprintf(A_filename1, "armadillo_eigval_%d.dat",i);
         armadillo_eigval.save(A_filename1, raw_ascii);
 
         char *A_filename2 = new char[1000];
-        sprintf(A_filename2, "armadillo_rho_%d.dat",N);
+        sprintf(A_filename2, "armadillo_rho_%d.dat",i);
         rho_array.save(A_filename2, raw_ascii);
-
 
 
         // WRITING RESULTS TO FILE FOR PLOTTING IN PYTHON:
         char *filename = new char[1000];
-        sprintf(filename, "eigvec_%d.dat",N);
+        sprintf(filename, "eigvec_%d.dat",i);
         jacobi_eigvec.save(filename, raw_ascii);
 
         char *filename1 = new char[1000];
-        sprintf(filename1, "eigval_%d.dat",N);
+        sprintf(filename1, "eigval_%d.dat",i);
         jacobi_eigval.save(filename1, raw_ascii);
 
         char *filename2 = new char[1000];
-        sprintf(filename2, "rho_%d.dat",N);
+        sprintf(filename2, "rho_%d.dat",i);
         rho_array.save(filename2, raw_ascii);
-
-
-        // WRITING BENCHMARK (# SIMILARITY TRANSFORMS AND DURATION OF EIGVEC/EIGVAL FINDING) TO FILE:
-        char *filename3 = new char[1000];
-        sprintf(filename3, "benchmark_%d_%d.dat",40,N);
-        benchmark.save(filename3, raw_ascii);
 
 
     }
 
+    // WRITING BENCHMARK (# SIMILARITY TRANSFORMS AND DURATION OF EIGVEC/EIGVAL FINDING) TO FILE:
+    char *filename3 = new char[1000];
+    sprintf(filename3, "benchmark_%d_%d.dat",8,i);
+    benchmark.save(filename3, raw_ascii);
 
     return 0;
 }
