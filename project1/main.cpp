@@ -10,10 +10,32 @@ using namespace std;
 int main()
 {
     // declaration of constants and variables
-    int i;
-    int n = 1000;
-    double constant;
-    double h = 1./(n+1);
+    int counter = 0;            // for counting number of similarity transforms
+    int N = 100;                // number of steps (also size of matrix (NxN)).
+    int rho_min = 0;
+    double omega = 1./20;
+    double rho_max = 18;
+    double tolerance = 1e-10;                 // defining "zero" value (maximum off-diagonal element size in mat A)
+    double h = (rho_max - rho_min)/(N + 1);   // step size
+    vec rho_array = linspace(rho_min,rho_max,N+2); // creating an array of equally spaced rhos
+
+    // CREATING MATRIX A & EIGENVECTOR-MATRIX R:
+    //----------------------------------------------------------------------------//
+    // A[l,k] -> l= linje, k = kolonne
+    int l = 0;  // linje nr.
+    int k = 0;  // kolonne nr.
+    mat A = zeros(N,N);             // declaring matrix A
+    vec e = (-1./(h*h))*ones(N-1);  // non-diagonal elements = constant
+    vec V = rho_array%rho_array;    // computing V_i = rho_i**2
+    vec V2 = (rho_array%rho_array)*(omega*omega) + 1/rho_array;
+    //cout << V2 << endl;
+    A.diag() = 2./(h*h) + V2;        // setting main diagonal elements
+    A.diag(1) = e;                  // off-diagonal elements (above diag.) = e
+    A.diag(-1) = e;                 // off-diagonal elements (below diag.) = e
+    mat R = eye(N,N);               // eigenvector matrix
+    //----------------------------------------------------------------------------//
+    
+    
     clock_t start, finish; //timing variables: start and finish time
     double duration_tridiag, duration_armadillo; // for storing execution times
 
