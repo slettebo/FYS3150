@@ -1,4 +1,6 @@
 #pragma once
+#include <armadillo>
+using namespace arma;
 
 class TrialWavefunction;
 class Metropolis;
@@ -11,8 +13,8 @@ private:
     int NumberOfParticles;
     double Omega;
     double Alpha;
-    double ** OldPosition;
-    double ** NewPosition;
+    mat OldPosition;
+    mat NewPosition;
     TrialWavefunction *Wavefunction;
 
     // HAMILTONIAN STUFF:
@@ -39,8 +41,8 @@ public:
     int     getNumberOfParticles()      {return NumberOfParticles;}
     double  getOmega()                  {return Omega;}
     double  getAlpha()                  {return Alpha;}
-    double  **getOldPosition()          {return OldPosition;}
-    double  **getNewPosition()          {return NewPosition;}
+    mat     getOldPosition()            {return OldPosition;}
+    mat     getNewPosition()            {return NewPosition;}
 
     // set
     void    setNumberOfDimensions(int inputNumberOfDimensions);
@@ -48,8 +50,8 @@ public:
     void    setOmega(double inputOmega);
     void    setAlpha(double inputAlpha);
     void    setInitialPositions();
-    void    setOldPosition(double **inputOldPosition);
-    void    setNewPosition(double **inputNewPosition);
+    void    setOldPosition(mat inputOldPosition);
+    void    setNewPosition(mat inputNewPosition);
 
 
     // MONTE CARLO STUFF:

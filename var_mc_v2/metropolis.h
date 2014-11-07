@@ -28,6 +28,7 @@ public:
     void    setNumberOfVariations(int inputNumberOfVariations)  {NumberOfVariations = inputNumberOfVariations;}
     void    setStepLength(double inputStepLength)               {StepLength = inputStepLength;}
     void    setRandomSeed(long int inputRandomSeed)             {RandomSeed = inputRandomSeed;}
+    void    setIntegral(double inputIntegral)                   {Integral = inputIntegral;}
 
     // do
     void    newStep(double ** r_new, double ** r_old);

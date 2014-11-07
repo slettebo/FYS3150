@@ -1,4 +1,6 @@
 #pragma once
+#include <armadillo>
+using namespace arma;
 // WAVEFUNCTION MOTHER CLASS
 
 class TrialWavefunction{
@@ -6,7 +8,6 @@ class TrialWavefunction{
 protected:
     int     NumberOfDimensions;
     int     NumberOfParticles;
-    //double  WavefunctionSquared;
     double  OldWavefunction;
     double  Omega;
     double  Alpha;
@@ -14,15 +15,13 @@ protected:
 public:
     TrialWavefunction();
 
-
-    virtual double evaluateWavefunction(double **) = 0;
-    virtual double setInitialPosition(double **) = 0;
+    virtual double evaluateWavefunction(mat) = 0;
+    virtual double setInitialPosition(mat) = 0;
 
     // GET:
     //-----
     int     getNumberOfDimensions()             {return NumberOfDimensions;}
     int     getNumberOfParticles()              {return NumberOfParticles;}
-    //double  getWavefunctionSquared()            {return WavefunctionSquared;}
     double  getOldWavefunction()                {return OldWavefunction;}
 
     // SET:

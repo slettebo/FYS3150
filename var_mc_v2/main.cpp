@@ -8,10 +8,10 @@
 #include "NonInteractingWavefunction.h"
 #include "hamiltonian.h"
 #include "harmonicoscillatorwithoutcoloumb.h"
+#include <armadillo>
 
 using namespace std;
-
-double wave_function(double alpha, double beta, double **r, int N_particles, int N_dimensions);
+using namespace arma;
 
 
 // RANDOM SEED GENERATOR:
@@ -43,7 +43,7 @@ int main()
 
     // WAVEFUNCTION PARAMETERS:
     //-------------------------
-    int N_dimensions = 2;
+    int N_dimensions = 3;
     int N_particles = 2;
     double omega = 1.0;
 
@@ -53,14 +53,19 @@ int main()
     double alpha = 1.0*omega;
     double beta = 1.0;
 
-    double **r_old, **r_new;
-    r_old = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
-    r_new = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
+    mat r_old, r_new;
+    r_old = zeros(N_particles,N_dimensions);
+    r_new = zeros(N_particles,N_dimensions);
+
+
+    //double **r_old, **r_new;
+    //r_old = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
+    //r_new = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
 
 
 
     System mySystem;
-    mySystem.setNumberOfDimensions(N_dimensions);
+    mySystem.setNumberOfDimensions(2);
     mySystem.setNumberOfParticles(N_particles);
     mySystem.setOmega(omega);
     mySystem.setAlpha(alpha);
@@ -71,70 +76,13 @@ int main()
     mySystem.initializeMetropolis(new Metropolis, N_cycles,N_variations);
     mySystem.setHamiltonian(new HarmonicOscillatorWithoutColoumb);
 
-    mySystem.runMetropolis();
+    int k;
+    for (k=0;k<N_cycles;k++){
+        mySystem.runMetropolis();
+    }
+    cout << mySystem.getMonteCarloMethod()->getIntegral() << endl;
+    cout << mySystem.getMonteCarloMethod()->getIntegral()/mySystem.getNumberOfAcceptedSteps() << endl;
 
-
-
-
-
-
-    //mySystem.setTrialWavefunction(new TrialWavefunctionNoninteracting);
-    //mySystem.getOldWavefunctionSquared();
-
-    /* WANT THESE THINGS:
-    //-------------------
-    vec SOLUTION = INTEGRAL, VARIANCE,;..
-
-    SOLUTION = mcsolver(mySystem);
-    */
-
-
-    double wf = 0;
-
-    //cout << mySystem.getWavefunction() << endl;
-
-
-    /*
-    //cout << mySystem.getNumberOfDimensions() << endl;
-
-    TrialWavefunctionNoninteracting a;
-
-    //a.setInitialPosition(r_old);
-
-    cout << r_old[0][0] << endl;
-    a.setAlpha(alpha);
-    a.setOmega(omega);
-
-    double b;
-    b = a.getWavefunctionSquared();
-    cout << "lol" << b << endl;
-    a.evaluateWavefunction(r_old);
-
-    //a.evaluate()
-    */
     return 0;
 }
 
-double wave_function(double alpha, double beta, double **r, int N_particles, int N_dimensions)
-{
-    int i, j;
-    double wf, argument, r_single_particle, r12;
-    argument = wf = 0;
-    for (i=0; i<N_particles; i++)
-    {
-        r_single_particle = 0;
-        for (j=0; j<N_dimensions; j++)
-        {
-            r_single_particle += r[i][j]*r[i][j];
-        }
-        argument += (r_single_particle);
-    }
-    //r12 = sqrt( (r[0][0]-r[1][0])*(r[0][0]-r[1][0]) + (r[0][1]-r[1][1])*(r[0][1]-r[1][1]) );
-    double a = 1.0;                 // 1.0 if the spin of the particles are anti-parallell, 1/3 if spins are parallell
-    double omega = 1.0;
-    double value;
-    value = exp(-alpha*omega*(argument/2.0));
-    //double extra_value;       //shouldn't this be in here?
-    //extra_value = exp(a*r12/(1+beta*r12));
-    return value;
-}

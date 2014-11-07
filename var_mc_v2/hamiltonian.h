@@ -1,6 +1,7 @@
 #pragma once
 #include "TrialWavefunction.h"
-
+#include <armadillo>
+using namespace arma;
 // HAMILTONIAN MOTHER CLASS
 
 class Hamiltonian
@@ -12,7 +13,7 @@ public:
     Hamiltonian();
 
     virtual void    setTrialWavefunction(TrialWavefunction* inputWavefunction) = 0;
-    virtual double  evaluateLocalEnergy(double **r);
+    virtual double  evaluateLocalEnergy(mat r);
 
 };
 

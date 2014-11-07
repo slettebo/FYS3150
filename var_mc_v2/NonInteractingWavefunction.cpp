@@ -1,12 +1,13 @@
 #include "NonInteractingWavefunction.h"
 #include "lib.h"
-
+#include <armadillo>
+using namespace arma;
 
 NonInteractingWavefunction::NonInteractingWavefunction(void){
 
 }
 
-double NonInteractingWavefunction::evaluateWavefunction(double **r){
+double NonInteractingWavefunction::evaluateWavefunction(mat r){
     int i, j;
     double r_single_particle = 0;
     double argument = 0;
@@ -17,7 +18,7 @@ double NonInteractingWavefunction::evaluateWavefunction(double **r){
         r_single_particle = 0;
         for (j=0; j<NumberOfDimensions; j++)
         {
-            r_single_particle += r[i][j]*r[i][j];
+            r_single_particle += r(i,j)*r(i,j);
         }
         argument += (r_single_particle);
     }
@@ -27,13 +28,13 @@ double NonInteractingWavefunction::evaluateWavefunction(double **r){
 
 
 
-double NonInteractingWavefunction::setInitialPosition(double **r){
+double NonInteractingWavefunction::setInitialPosition(mat r){
     int i, j;
     for (i=0; i<NumberOfParticles; i++)
     {
         for (j=0; j<NumberOfDimensions; j++)
         {
-            r[i][j] = 0;
+            r(i,j) = 0;
         }
     }
 }

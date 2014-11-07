@@ -8,7 +8,7 @@ class NonInteractingWavefunction : public TrialWavefunction{
 public:
     NonInteractingWavefunction();   // constructor
 
-    double  evaluateWavefunction(double **r);
-    double  setInitialPosition(double **r);
+    double  evaluateWavefunction(mat r);
+    double  setInitialPosition(mat r);
 };
 

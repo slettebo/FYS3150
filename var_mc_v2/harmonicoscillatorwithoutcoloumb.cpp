@@ -10,7 +10,7 @@ void HarmonicOscillatorWithoutColoumb::setTrialWavefunction(TrialWavefunction *i
     Wavefunction = inputWavefunction;
 }
 
-double HarmonicOscillatorWithoutColoumb::evaluateLocalEnergy(double **r)
+double HarmonicOscillatorWithoutColoumb::evaluateLocalEnergy(mat r)
 {
     int i, j;
     double r_single_particle;
@@ -21,12 +21,13 @@ double HarmonicOscillatorWithoutColoumb::evaluateLocalEnergy(double **r)
     // evaluate potential energy:
     double e_potential = 0;
 
+
     for (i=0; i<Wavefunction->getNumberOfParticles(); i++)
     {
         r_single_particle = 0;
         for (j=0; j<Wavefunction->getNumberOfDimensions(); j++)
         {
-            r_single_particle += r[i][j]*r[i][j];
+            r_single_particle += r(i,j)*r(i,j);
         }
         e_potential += (r_single_particle);
     }

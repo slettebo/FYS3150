@@ -10,7 +10,7 @@ public:
 
 
     void    setTrialWavefunction(TrialWavefunction *inputWavefunction);
-    double  evaluateLocalEnergy(double **r);
+    double  evaluateLocalEnergy(mat r);
 
 };
 
