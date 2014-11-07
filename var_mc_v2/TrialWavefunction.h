@@ -6,8 +6,8 @@ class TrialWavefunction{
 protected:
     int     NumberOfDimensions;
     int     NumberOfParticles;
-    double  WavefunctionSquared;
-    double  OldWavefunctionSquared;
+    //double  WavefunctionSquared;
+    double  OldWavefunction;
     double  Omega;
     double  Alpha;
 
@@ -22,8 +22,8 @@ public:
     //-----
     int     getNumberOfDimensions()             {return NumberOfDimensions;}
     int     getNumberOfParticles()              {return NumberOfParticles;}
-    double  getWavefunctionSquared()            {return WavefunctionSquared;}
-    double  getOldWavefunctionSquared()         {return OldWavefunctionSquared;}
+    //double  getWavefunctionSquared()            {return WavefunctionSquared;}
+    double  getOldWavefunction()                {return OldWavefunction;}
 
     // SET:
     //-----
@@ -31,6 +31,6 @@ public:
     void    setNumberOfParticles(int inputNumberOfParticles)    {NumberOfParticles = inputNumberOfParticles;}
     void    setOmega(double inputOmega)                         {Omega = inputOmega;}
     void    setAlpha(double inputAlpha)                         {Alpha = inputAlpha;}
-    void    setOldWavefunctionSquared(double OldValue)          {OldWavefunctionSquared = OldValue;}
+    void    setOldWavefunction(double OldValue)                 {OldWavefunction = OldValue;}
 
 };

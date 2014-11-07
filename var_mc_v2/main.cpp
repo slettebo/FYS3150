@@ -6,6 +6,8 @@
 #include "metropolis.h"
 #include "TrialWavefunction.h"
 #include "NonInteractingWavefunction.h"
+#include "hamiltonian.h"
+#include "harmonicoscillatorwithoutcoloumb.h"
 
 using namespace std;
 
@@ -37,7 +39,7 @@ int main()
     //-------------------------
     ullint startTime = unixTimeInMicroseconds();
     lint maxValueSignedLongInt = pow(2,31)-2;
-    lint idum = (lint) (startTime % maxValueSignedLongInt); // random number generator seed
+    long int idum = (lint) (startTime % maxValueSignedLongInt); // random number generator seed
 
     // WAVEFUNCTION PARAMETERS:
     //-------------------------
@@ -55,15 +57,26 @@ int main()
     r_old = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
     r_new = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
 
+
+
     System mySystem;
     mySystem.setNumberOfDimensions(N_dimensions);
     mySystem.setNumberOfParticles(N_particles);
     mySystem.setOmega(omega);
     mySystem.setAlpha(alpha);
-
-    mySystem.setTrialWavefunction(new NonInteractingWavefunction());
-    mySystem.initializeMetropolis(new Metropolis, N_cycles,N_particles,step_length);
+    mySystem.setStepLength(step_length);
     mySystem.setRandomSeed(idum);
+    mySystem.setTrialWavefunction(new NonInteractingWavefunction());
+    mySystem.setInitialPositions();
+    mySystem.initializeMetropolis(new Metropolis, N_cycles,N_variations);
+    mySystem.setHamiltonian(new HarmonicOscillatorWithoutColoumb);
+
+    mySystem.runMetropolis();
+
+
+
+
+
 
     //mySystem.setTrialWavefunction(new TrialWavefunctionNoninteracting);
     //mySystem.getOldWavefunctionSquared();

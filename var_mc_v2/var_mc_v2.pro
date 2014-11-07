@@ -9,7 +9,9 @@ SOURCES += main.cpp \
     electron.cpp \
     metropolis.cpp \
     TrialWavefunction.cpp \
-    NonInteractingWavefunction.cpp
+    NonInteractingWavefunction.cpp \
+    hamiltonian.cpp \
+    harmonicoscillatorwithoutcoloumb.cpp
 
 HEADERS += \
     lib.h \
@@ -17,5 +19,7 @@ HEADERS += \
     electron.h \
     metropolis.h \
     TrialWavefunction.h \
-    NonInteractingWavefunction.h
+    NonInteractingWavefunction.h \
+    hamiltonian.h \
+    harmonicoscillatorwithoutcoloumb.h
 

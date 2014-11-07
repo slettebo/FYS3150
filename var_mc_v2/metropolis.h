@@ -5,9 +5,10 @@ private:
     int     NumberOfCycles;
     int     NumberOfVariations;
     double  StepLength;
-    int     NumberOfAcceptedSteps = 0;
+    int     NumberOfAcceptedSteps;
     double  Integral;
     double  Variance;
+    long int RandomSeed;
 
 
 
@@ -26,6 +27,10 @@ public:
     void    setNumberOfCycles(int inputNumberOfCycles)          {NumberOfCycles = inputNumberOfCycles;}
     void    setNumberOfVariations(int inputNumberOfVariations)  {NumberOfVariations = inputNumberOfVariations;}
     void    setStepLength(double inputStepLength)               {StepLength = inputStepLength;}
+    void    setRandomSeed(long int inputRandomSeed)             {RandomSeed = inputRandomSeed;}
+
+    // do
+    void    newStep(double ** r_new, double ** r_old);
 
 };
 
