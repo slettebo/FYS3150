@@ -53,15 +53,27 @@ int main()
     double alpha = 1.0*omega;
     double beta = 1.0;
 
+
+
+    // R-VECTOR FOR TESTING::
+
     mat r_old, r_new;
     r_old = zeros(N_particles,N_dimensions);
     r_new = zeros(N_particles,N_dimensions);
 
 
-    //double **r_old, **r_new;
-    //r_old = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
-    //r_new = (double **) matrix( N_particles,N_dimensions, sizeof(double) );
+    // randomized initial r-vector:
+    int i,j;
+    for (i=0; i<N_particles; i++)
+    {
+        for (j=0; j<N_dimensions; j++)
+        {
+            r_old(i,j) = step_length*(ran0(&idum)-0.5);
+        }
+    }
 
+
+    //cout << dot(r_old.row(0).t(),r_old.row(0).t()) << endl;
 
 
     System mySystem;
@@ -73,7 +85,7 @@ int main()
     mySystem.setRandomSeed(idum);
     mySystem.setTrialWavefunction(new NonInteractingWavefunction());
     mySystem.setInitialPositions();
-    mySystem.initializeMetropolis(new Metropolis, N_cycles,N_variations);
+    mySystem.initializeMetropolis(new Metropolis,N_cycles,N_variations);
     mySystem.setHamiltonian(new HarmonicOscillatorWithoutColoumb);
 
     int k;

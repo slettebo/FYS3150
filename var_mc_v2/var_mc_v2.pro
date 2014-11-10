@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     TrialWavefunction.cpp \
     NonInteractingWavefunction.cpp \
     hamiltonian.cpp \
-    harmonicoscillatorwithoutcoloumb.cpp
+    harmonicoscillatorwithoutcoloumb.cpp \
+    interactingwavefunction.cpp
 
 HEADERS += \
     lib.h \
@@ -21,5 +22,6 @@ HEADERS += \
     TrialWavefunction.h \
     NonInteractingWavefunction.h \
     hamiltonian.h \
-    harmonicoscillatorwithoutcoloumb.h
+    harmonicoscillatorwithoutcoloumb.h \
+    interactingwavefunction.h
 

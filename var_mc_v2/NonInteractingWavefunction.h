@@ -9,6 +9,5 @@ public:
     NonInteractingWavefunction();   // constructor
 
     double  evaluateWavefunction(mat r);
-    double  setInitialPosition(mat r);
 };
 

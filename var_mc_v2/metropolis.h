@@ -1,4 +1,9 @@
 #pragma once
+#include <armadillo>
+#include "TrialWavefunction.h"
+using namespace arma;
+
+class TrialWavefunction;
 
 class Metropolis{
 private:
@@ -9,7 +14,7 @@ private:
     double  Integral;
     double  Variance;
     long int RandomSeed;
-
+    TrialWavefunction *Wavefunction;
 
 
 public:
@@ -31,7 +36,10 @@ public:
     void    setIntegral(double inputIntegral)                   {Integral = inputIntegral;}
 
     // do
-    void    newStep(double ** r_new, double ** r_old);
+    void    newStep();
+    mat     performMonteCarlo();
 
+    // CLASS INHERITANCE AND OTHER:
+    void    setTrialWavefunction(TrialWavefunction *inputWavefunction);
 };
 

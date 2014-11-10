@@ -16,7 +16,6 @@ public:
     TrialWavefunction();
 
     virtual double evaluateWavefunction(mat) = 0;
-    virtual double setInitialPosition(mat) = 0;
 
     // GET:
     //-----

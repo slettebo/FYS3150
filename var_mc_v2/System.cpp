@@ -69,47 +69,41 @@ void System::setNewPosition(mat inputNewPosition)
     NewPosition = inputNewPosition;
 }
 
-bool System::newStepMetropolis()
-{
-    int i, j;
-    double wf_new, wf_old;
+//bool System::newStepMetropolis()
+//{
+//    int i, j;
+//    double wf_new, wf_old;
 
-    // taking a new, random step
-    for (i=0; i<NumberOfParticles; i++)
-        {
-            for (j=0; j<NumberOfDimensions; j++)
-                {
-                    NewPosition(i,j) = OldPosition(i,j)+StepLength*(ran0(&RandomSeed)-0.5);
-                }
-        }
-    // calculating new wave-function
+//    // taking a new, random step
+//    for (i=0; i<NumberOfParticles; i++)
+//        {
+//            for (j=0; j<NumberOfDimensions; j++)
+//                {
+//                    NewPosition(i,j) = OldPosition(i,j)+StepLength*(ran0(&RandomSeed)-0.5);
+//                }
+//        }
+//    // calculating new wave-function
 
-    wf_new = getWavefunction()->evaluateWavefunction(NewPosition);
-    wf_old = getWavefunction()->getOldWavefunction();
+//    wf_new = getWavefunction()->evaluateWavefunction(NewPosition);
+//    wf_old = getWavefunction()->getOldWavefunction();
 
-    // metropolis test:
-    if(ran2(&RandomSeed) <= (wf_new*wf_new)/(wf_old*wf_old))    // STEP ACCEPTED
-        {
+//    // metropolis test:
+//    if(ran2(&RandomSeed) <= (wf_new*wf_new)/(wf_old*wf_old))    // STEP ACCEPTED
+//        {
 
-            OldPosition = NewPosition;
-            getWavefunction()->setOldWavefunction(wf_new);
-            return true;
+//            OldPosition = NewPosition;
+//            getWavefunction()->setOldWavefunction(wf_new);
+//            return true;
 
-        }
-    else    // STEP REFUSED
-    {
-        return false;
-    }
-}
+//        }
+//    else    // STEP REFUSED
+//    {
+//        return false;
+//    }
+//}
 
-void System::runMetropolis(){
-    bool Accepted = newStepMetropolis();
-    if (Accepted){
-        getMonteCarloMethod()->setIntegral(getMonteCarloMethod()->getIntegral() + getHamiltonian()->evaluateLocalEnergy(getOldPosition()));
-        NumberOfAcceptedSteps ++;
-    }
-    else{
-    }
+void System::runMonteCarlo(){
+    MonteCarloMethod->performMonteCarlo();
 }
 
 void System::setTrialWavefunction(TrialWavefunction *inputWavefunction){
@@ -125,6 +119,9 @@ void System::initializeMetropolis(Metropolis *inputMonteCarloMethod, int inputNu
     MonteCarloMethod = inputMonteCarloMethod;
     MonteCarloMethod->setNumberOfCycles(inputNumberOfCycles);
     MonteCarloMethod->setNumberOfVariations(inputNumberOfVariations);
+    MonteCarloMethod->setRandomSeed(RandomSeed);
+    MonteCarloMethod->setStepLength(StepLength);
+    MonteCarloMethod->setTrialWavefunction(Wavefunction);
     NumberOfAcceptedSteps = 0;
 }
 

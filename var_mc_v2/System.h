@@ -23,7 +23,6 @@ private:
     // MONTE CARLO STUFF:
     long int RandomSeed;
     double StepLength;
-    int NumberOfAcceptedSteps;
     Metropolis *MonteCarloMethod;
     double Energy;
     double EnergySquared;
@@ -64,8 +63,8 @@ public:
     void    setStepLength(double inputStepLength);
 
     // run
-    bool    newStepMetropolis();
-    void    runMetropolis();
+    //bool    newStepMetropolis();
+    mat    runMonteCarlo();
 
 
     // CLASS INHERITANCE AND OTHER:
