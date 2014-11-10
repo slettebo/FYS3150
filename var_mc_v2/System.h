@@ -13,8 +13,8 @@ private:
     int NumberOfParticles;
     double Omega;
     double Alpha;
-    mat OldPosition;
-    mat NewPosition;
+//    mat OldPosition;
+//    mat NewPosition;
     TrialWavefunction *Wavefunction;
 
     // HAMILTONIAN STUFF:
@@ -40,23 +40,25 @@ public:
     int     getNumberOfParticles()      {return NumberOfParticles;}
     double  getOmega()                  {return Omega;}
     double  getAlpha()                  {return Alpha;}
-    mat     getOldPosition()            {return OldPosition;}
-    mat     getNewPosition()            {return NewPosition;}
+    double  getEnergy()                 {return Energy;}
+    double  getEnergySquared()          {return EnergySquared;}
+//    mat     getOldPosition()            {return OldPosition;}
+//    mat     getNewPosition()            {return NewPosition;}
 
     // set
     void    setNumberOfDimensions(int inputNumberOfDimensions);
     void    setNumberOfParticles(int inputNumberOfParticles);
     void    setOmega(double inputOmega);
     void    setAlpha(double inputAlpha);
-    void    setInitialPositions();
-    void    setOldPosition(mat inputOldPosition);
-    void    setNewPosition(mat inputNewPosition);
+
+//    void    setOldPosition(mat inputOldPosition);
+//    void    setNewPosition(mat inputNewPosition);
 
 
     // MONTE CARLO STUFF:
 
     // get
-    int     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
+    //int     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
 
     // set
     void    setRandomSeed(long int inputRandomSeed);
@@ -64,7 +66,7 @@ public:
 
     // run
     //bool    newStepMetropolis();
-    mat    runMonteCarlo();
+    void    startMonteCarlo();
 
 
     // CLASS INHERITANCE AND OTHER:

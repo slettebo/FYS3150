@@ -11,6 +11,8 @@ protected:
     double  OldWavefunction;
     double  Omega;
     double  Alpha;
+//    mat     OldPosition;
+//    mat     NewPosition;
 
 public:
     TrialWavefunction();
@@ -23,6 +25,7 @@ public:
     int     getNumberOfParticles()              {return NumberOfParticles;}
     double  getOldWavefunction()                {return OldWavefunction;}
 
+
     // SET:
     //-----
     void    setNumberOfDimensions(int inputNumberOfDimensions)  {NumberOfDimensions = inputNumberOfDimensions;}
@@ -30,5 +33,6 @@ public:
     void    setOmega(double inputOmega)                         {Omega = inputOmega;}
     void    setAlpha(double inputAlpha)                         {Alpha = inputAlpha;}
     void    setOldWavefunction(double OldValue)                 {OldWavefunction = OldValue;}
+
 
 };

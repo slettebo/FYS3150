@@ -7,6 +7,8 @@ using namespace arma;
 class Hamiltonian
 {
 protected:
+    double h;
+    double h2;
     TrialWavefunction* Wavefunction;
 
 public:

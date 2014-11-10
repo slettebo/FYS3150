@@ -2,6 +2,8 @@
 #include "lib.h"
 Hamiltonian::Hamiltonian()
 {
+    h = 1e-5;
+    h2 = 1.0/(h*h);
 }
 
 
@@ -9,8 +11,8 @@ double Hamiltonian::evaluateLocalEnergy(mat r)
 {
     // evaluate the kinetic energy:
     int i, j;
-    double h = 1e-5;
-    double h2 = 1.0/(h*h);
+//    double h = 1e-5;
+//    double h2 = 1.0/(h*h);
     double wf_minus, wf_plus, e_kinetic;
     mat r_plus, r_minus;
     r_plus = mat(Wavefunction->getNumberOfParticles(),Wavefunction->getNumberOfDimensions());

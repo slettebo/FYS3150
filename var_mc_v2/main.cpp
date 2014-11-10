@@ -9,7 +9,7 @@
 #include "hamiltonian.h"
 #include "harmonicoscillatorwithoutcoloumb.h"
 #include <armadillo>
-
+#include <iomanip>
 using namespace std;
 using namespace arma;
 
@@ -32,8 +32,8 @@ int main()
     // MONTE CARLO PARAMETERS:
     //------------------------
     int N_variations = 1;         // number of different variational parameters
-    int N_cycles = 1e4;           // no. of monte carlo cycles
-    double step_length = 1.2;       // set to approximately 50% acceptance
+    int N_cycles = 10000;           // no. of monte carlo cycles
+    double step_length = 1.7;       // set to approximately 50% acceptance rate
 
     // RANDOM NUMBER SEED:
     //-------------------------
@@ -43,7 +43,7 @@ int main()
 
     // WAVEFUNCTION PARAMETERS:
     //-------------------------
-    int N_dimensions = 3;
+    int N_dimensions = 2;
     int N_particles = 2;
     double omega = 1.0;
 
@@ -84,16 +84,27 @@ int main()
     mySystem.setStepLength(step_length);
     mySystem.setRandomSeed(idum);
     mySystem.setTrialWavefunction(new NonInteractingWavefunction());
-    mySystem.setInitialPositions();
-    mySystem.initializeMetropolis(new Metropolis,N_cycles,N_variations);
     mySystem.setHamiltonian(new HarmonicOscillatorWithoutColoumb);
+    mySystem.initializeMetropolis(new Metropolis,N_cycles,N_variations);
+    mySystem.startMonteCarlo();
 
-    int k;
-    for (k=0;k<N_cycles;k++){
-        mySystem.runMetropolis();
-    }
-    cout << mySystem.getMonteCarloMethod()->getIntegral() << endl;
-    cout << mySystem.getMonteCarloMethod()->getIntegral()/mySystem.getNumberOfAcceptedSteps() << endl;
+    double E, E2;
+    double NA;
+    E = mySystem.getEnergy();
+    E2 = mySystem.getEnergySquared();
+    NA = mySystem.getMonteCarloMethod()->getNumberOfAcceptedSteps();
+
+    cout << "Energy = " << E << ". Energy^2 = " << E2 << ". Variance = " << (E*E + E2)/NA << ". Acceptance rate = " << NA/N_cycles*100 << endl;
+
+
+    /*ØNSKER:
+    mySystem.runMetropolis();
+    double E = mySystem.getEnergy();
+    double E2 = mySystem.getEnergySquared();
+
+    */
+    //cout << mySystem.getMonteCarloMethod()->getIntegral() << endl;
+    //cout << mySystem.getMonteCarloMethod()->getIntegral()/mySystem.getNumberOfAcceptedSteps() << endl;
 
     return 0;
 }

@@ -43,31 +43,17 @@ void System::setStepLength(double inputStepLength)
 }
 
 
-void System::setInitialPositions()
-{
-    int i, j;
-    OldPosition = mat( NumberOfParticles, NumberOfDimensions);
-    NewPosition = zeros( NumberOfParticles, NumberOfDimensions);
-    //setting a random initial position:
-    for (i=0; i<NumberOfParticles; i++)
-    {
-        for (j=0; j<NumberOfDimensions; j++)
-        {
-            OldPosition(i,j) = StepLength*(ran0(&RandomSeed)-0.5);
-        }
-    }
-    getWavefunction()->setOldWavefunction(getWavefunction()->evaluateWavefunction(OldPosition));
-}
 
-void System::setOldPosition(mat inputOldPosition)
-{
-    OldPosition = inputOldPosition;
-}
 
-void System::setNewPosition(mat inputNewPosition)
-{
-    NewPosition = inputNewPosition;
-}
+//void System::setOldPosition(mat inputOldPosition)
+//{
+//    OldPosition = inputOldPosition;
+//}
+
+//void System::setNewPosition(mat inputNewPosition)
+//{
+//    NewPosition = inputNewPosition;
+//}
 
 //bool System::newStepMetropolis()
 //{
@@ -102,8 +88,20 @@ void System::setNewPosition(mat inputNewPosition)
 //    }
 //}
 
-void System::runMonteCarlo(){
-    MonteCarloMethod->performMonteCarlo();
+
+void System::startMonteCarlo(){
+
+    MonteCarloMethod->runMonteCarlo();
+    Energy = MonteCarloMethod->getX();
+    EnergySquared = MonteCarloMethod->getX2();
+    //Energy2 = MonteCarloMethod->getX2();
+//    bool Accepted = MonteCarloMethod->newStep();
+//    if (Accepted){
+//        Energy = Energy + TypeHamiltonian->evaluateLocalEnergy(MonteCarloMethod->getOldPosition());
+//        MonteCarloMethod->addAcceptedStep();
+//    }
+//    else{
+//    }
 }
 
 void System::setTrialWavefunction(TrialWavefunction *inputWavefunction){
@@ -122,7 +120,8 @@ void System::initializeMetropolis(Metropolis *inputMonteCarloMethod, int inputNu
     MonteCarloMethod->setRandomSeed(RandomSeed);
     MonteCarloMethod->setStepLength(StepLength);
     MonteCarloMethod->setTrialWavefunction(Wavefunction);
-    NumberOfAcceptedSteps = 0;
+    MonteCarloMethod->setHamiltonian(TypeHamiltonian);
+    MonteCarloMethod->setInitialPositions();
 }
 
 void System::setHamiltonian(Hamiltonian *inputHamiltonian){
