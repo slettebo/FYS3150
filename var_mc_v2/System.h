@@ -9,24 +9,24 @@ class Hamiltonian;
 class System{
 private:
     // WAVEFUNCTION STUFF:
-    int NumberOfDimensions;
-    int NumberOfParticles;
-    double Omega;
-    double Alpha;
-//    mat OldPosition;
-//    mat NewPosition;
-    TrialWavefunction *Wavefunction;
+    int                 NumberOfDimensions;
+    int                 NumberOfParticles;
+    double              Omega;
+    vec                 Alpha;
+    TrialWavefunction   *Wavefunction;
 
     // HAMILTONIAN STUFF:
-    Hamiltonian *TypeHamiltonian;
+    Hamiltonian         *TypeHamiltonian;
 
     // MONTE CARLO STUFF:
-    long int RandomSeed;
-    double StepLength;
-    Metropolis *MonteCarloMethod;
-    double Energy;
-    double EnergySquared;
+    long int            RandomSeed;
+    double              StepLength;
+    Metropolis          *MonteCarloMethod;
 
+    // PHYSICAL SYSTEM STUFF
+    vec                 Energy;
+    vec                 EnergySquared;
+    vec                 Variance;
 
 
 public:
@@ -39,33 +39,22 @@ public:
     int     getNumberOfDimensions()     {return NumberOfDimensions;}
     int     getNumberOfParticles()      {return NumberOfParticles;}
     double  getOmega()                  {return Omega;}
-    double  getAlpha()                  {return Alpha;}
-    double  getEnergy()                 {return Energy;}
-    double  getEnergySquared()          {return EnergySquared;}
-//    mat     getOldPosition()            {return OldPosition;}
-//    mat     getNewPosition()            {return NewPosition;}
+    vec     getAlpha()                  {return Alpha;}
+//    vec     getEnergy()                 {return Energy;}
+//    vec     getEnergySquared()          {return EnergySquared;}
+//    vec     getVariance()               {return Variance;}
 
     // set
     void    setNumberOfDimensions(int inputNumberOfDimensions);
     void    setNumberOfParticles(int inputNumberOfParticles);
     void    setOmega(double inputOmega);
-    void    setAlpha(double inputAlpha);
-
-//    void    setOldPosition(mat inputOldPosition);
-//    void    setNewPosition(mat inputNewPosition);
-
-
-    // MONTE CARLO STUFF:
-
-    // get
-    //int     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
+    void    setAlpha(vec inputAlpha);
 
     // set
     void    setRandomSeed(long int inputRandomSeed);
     void    setStepLength(double inputStepLength);
 
     // run
-    //bool    newStepMetropolis();
     void    startMonteCarlo();
 
 
@@ -76,7 +65,6 @@ public:
     TrialWavefunction* getWavefunction()    {return Wavefunction;}
     Metropolis* getMonteCarloMethod()       {return MonteCarloMethod;}
     Hamiltonian* getHamiltonian()           {return TypeHamiltonian;}
-
 
 
 };

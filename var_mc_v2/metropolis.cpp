@@ -7,12 +7,15 @@
 using namespace arma;
 
 
-Metropolis::Metropolis()
+Metropolis::Metropolis(int inputNumberOfCycles, int inputNumberOfVariations)
 {
+    NumberOfCycles = inputNumberOfCycles;
+    NumberOfVariations = inputNumberOfVariations;
     dx = 0;
-    X = 0;
-    X2 = 0;
-    NumberOfAcceptedSteps = 0;
+    X = zeros(NumberOfVariations);
+    X2 = zeros(NumberOfVariations);
+    Variance = zeros(NumberOfVariations);
+    NumberOfAcceptedSteps = zeros(NumberOfVariations);
 }
 
 void Metropolis::setInitialPositions()
@@ -46,19 +49,17 @@ bool Metropolis::newStep()
                     NewPosition(i,j) = OldPosition(i,j)+StepLength*(ran0(&RandomSeed)-0.5);
                 }
         }
-    // calculating new wave-function
 
+    // calculating new wave-function
     wf_new = Wavefunction->evaluateWavefunction(NewPosition);
     wf_old = Wavefunction->getOldWavefunction();
 
     // metropolis test:
     if(ran2(&RandomSeed) <= (wf_new*wf_new)/(wf_old*wf_old))    // STEP ACCEPTED
         {
-
             OldPosition = NewPosition;
             Wavefunction->setOldWavefunction(wf_new);
             return true;
-
         }
     else    // STEP REFUSED
     {
@@ -69,29 +70,32 @@ bool Metropolis::newStep()
 
 void Metropolis::runMonteCarlo()
 {
-    int i, j;
-
+    int i, j, NOA;
+    double I, I2;
     for (i=0; i<NumberOfVariations; i++)
     {
-
+        Wavefunction->setAlpha(i);
+        I = I2 = NOA = 0;
         for (j=0; j<NumberOfCycles; j++)
         {
             bool Accepted = newStep();
             if (Accepted){
                 dx = TypeHamiltonian->evaluateLocalEnergy(OldPosition);
-                X += dx;
-                X2 += dx*dx;
-                NumberOfAcceptedSteps ++;
+                I += dx;
+                I2 += dx*dx;
+                NOA++;
 
             }
             else
             {
-                X += dx;
-                X2 += dx*dx;
+                I += dx;
+                I2 += dx*dx;
             }
         }
-        X = X/double(NumberOfCycles);
-        X2 = X2/double(NumberOfCycles);
+        NumberOfAcceptedSteps(i) = NOA;
+        X(i) = I/double(NumberOfCycles);
+        X2(i) = I2/double(NumberOfCycles);
+        Variance(i) = (I*I + I2)/double(NumberOfCycles);
     }
 }
 

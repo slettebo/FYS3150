@@ -12,44 +12,41 @@ private:
     int         NumberOfCycles;
     int         NumberOfVariations;
     double      StepLength;
-    int         NumberOfAcceptedSteps;
-    double      dx;
-    double      X;
-    double      X2;
     long int    RandomSeed;
+    double      dx;
+    vec         X;
+    vec         X2;
+    vec         Variance;
+    vec         NumberOfAcceptedSteps;
     mat         OldPosition;
     mat         NewPosition;
+
     TrialWavefunction *Wavefunction;
     Hamiltonian *TypeHamiltonian;
 
 
 public:
-    Metropolis();   // constructor
+    Metropolis(int inputNumberOfCycles, int inputNumberOfVariations);   // constructor
 
     // get
     int     getNumberOfCycles()          {return NumberOfCycles;}
     int     getNumberOfVariations()      {return NumberOfVariations;}
     double  getStepLength()              {return StepLength;}
-    double  getNumberOfAcceptedSteps()   {return NumberOfAcceptedSteps;}
-    double  getX()                       {return X;}
-    double  getX2()                      {return X2;}
-    mat     getOldPosition()             {return OldPosition;}
-    mat     getNewPosition()             {return NewPosition;}
+    vec     getNumberOfAcceptedSteps()   {return NumberOfAcceptedSteps;}
+    vec     getX()                       {return X;}
+    vec     getX2()                      {return X2;}
+    vec     getVariance()                {return Variance;}
 
     // set
     void    setNumberOfCycles(int inputNumberOfCycles)          {NumberOfCycles = inputNumberOfCycles;}
     void    setNumberOfVariations(int inputNumberOfVariations)  {NumberOfVariations = inputNumberOfVariations;}
     void    setStepLength(double inputStepLength)               {StepLength = inputStepLength;}
     void    setRandomSeed(long int inputRandomSeed)             {RandomSeed = inputRandomSeed;}
-    //void    setIntegral(double inputIntegral)                   {Integral = inputIntegral;}
-    void    setOldPosition(mat inputOldPosition)                {OldPosition = inputOldPosition;}
-    void    setNewPosition(mat inputNewPosition)                {NewPosition = inputNewPosition;}
 
     // do
     bool    newStep();
     void    setInitialPositions();
     void    runMonteCarlo();
-    //void    addAcceptedStep()                                   {NumberOfAcceptedSteps ++;}
 
     // CLASS INHERITANCE AND OTHER:
     void    setTrialWavefunction(TrialWavefunction *inputWavefunction);

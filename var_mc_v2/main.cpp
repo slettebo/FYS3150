@@ -32,7 +32,7 @@ int main()
     // MONTE CARLO PARAMETERS:
     //------------------------
     int N_variations = 1;         // number of different variational parameters
-    int N_cycles = 10000;           // no. of monte carlo cycles
+    int N_cycles = 1e6;           // no. of monte carlo cycles
     double step_length = 1.7;       // set to approximately 50% acceptance rate
 
     // RANDOM NUMBER SEED:
@@ -51,60 +51,33 @@ int main()
     // VARIATIONAL PARAMETERS:
     //------------------------
     double alpha = 1.0*omega;
+    vec alpha2;
+    double alphamin = 0.5*omega;
+    double alphamax = alphamin + (0.1*(N_variations-1));
+    alpha2 = linspace(alpha, alpha, N_variations);
     double beta = 1.0;
+    cout << "alpha=" << alpha2 << endl;
 
-
-
-    // R-VECTOR FOR TESTING::
-
-    mat r_old, r_new;
-    r_old = zeros(N_particles,N_dimensions);
-    r_new = zeros(N_particles,N_dimensions);
-
-
-    // randomized initial r-vector:
-    int i,j;
-    for (i=0; i<N_particles; i++)
-    {
-        for (j=0; j<N_dimensions; j++)
-        {
-            r_old(i,j) = step_length*(ran0(&idum)-0.5);
-        }
-    }
-
-
-    //cout << dot(r_old.row(0).t(),r_old.row(0).t()) << endl;
 
 
     System mySystem;
-    mySystem.setNumberOfDimensions(2);
+    mySystem.setNumberOfDimensions(N_dimensions);
     mySystem.setNumberOfParticles(N_particles);
     mySystem.setOmega(omega);
-    mySystem.setAlpha(alpha);
+    mySystem.setAlpha(alpha2);
     mySystem.setStepLength(step_length);
     mySystem.setRandomSeed(idum);
-    mySystem.setTrialWavefunction(new NonInteractingWavefunction());
+    mySystem.setTrialWavefunction(new NonInteractingWavefunction);
     mySystem.setHamiltonian(new HarmonicOscillatorWithoutColoumb);
-    mySystem.initializeMetropolis(new Metropolis,N_cycles,N_variations);
+    mySystem.initializeMetropolis(new Metropolis(N_cycles, N_variations), N_cycles, N_variations);
     mySystem.startMonteCarlo();
 
-    double E, E2;
-    double NA;
-    E = mySystem.getEnergy();
-    E2 = mySystem.getEnergySquared();
+    vec E, E2, NA, V;
+    E = mySystem.getMonteCarloMethod()->getX();
+    E2 = mySystem.getMonteCarloMethod()->getX2();
+    V = mySystem.getMonteCarloMethod()->getVariance();
     NA = mySystem.getMonteCarloMethod()->getNumberOfAcceptedSteps();
-
-    cout << "Energy = " << E << ". Energy^2 = " << E2 << ". Variance = " << (E*E + E2)/NA << ". Acceptance rate = " << NA/N_cycles*100 << endl;
-
-
-    /*ØNSKER:
-    mySystem.runMetropolis();
-    double E = mySystem.getEnergy();
-    double E2 = mySystem.getEnergySquared();
-
-    */
-    //cout << mySystem.getMonteCarloMethod()->getIntegral() << endl;
-    //cout << mySystem.getMonteCarloMethod()->getIntegral()/mySystem.getNumberOfAcceptedSteps() << endl;
+    cout << "Energy = " << E << ". Energy^2 = " << E2 << ". Variance = " << V << ". Acceptance rate = " << NA/N_cycles*100 << endl;
 
     return 0;
 }
