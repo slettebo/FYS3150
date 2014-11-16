@@ -1,9 +1,9 @@
 #pragma once
 #include <armadillo>
+
 using namespace arma;
 
 class TrialWavefunction;
-class Metropolis;
 class Hamiltonian;
 
 class System{
@@ -14,14 +14,20 @@ private:
     double              Omega;
     vec                 Alpha;
     TrialWavefunction   *Wavefunction;
+    mat                 OldPosition;
+    mat                 NewPosition;
+    mat                 RelativePosition;
+    mat                 a;
 
     // HAMILTONIAN STUFF:
     Hamiltonian         *TypeHamiltonian;
 
     // MONTE CARLO STUFF:
+    int                 NumberOfCycles;
+    int                 NumberOfVariations;
     long int            RandomSeed;
     double              StepLength;
-    Metropolis          *MonteCarloMethod;
+    vec                 NumberOfAcceptedSteps;
 
     // PHYSICAL SYSTEM STUFF
     vec                 Energy;
@@ -40,30 +46,29 @@ public:
     int     getNumberOfParticles()      {return NumberOfParticles;}
     double  getOmega()                  {return Omega;}
     vec     getAlpha()                  {return Alpha;}
-//    vec     getEnergy()                 {return Energy;}
-//    vec     getEnergySquared()          {return EnergySquared;}
-//    vec     getVariance()               {return Variance;}
+    vec     getEnergy()                 {return Energy;}
+    vec     getEnergySquared()          {return EnergySquared;}
+    vec     getVariance()               {return Variance;}
+    vec     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
 
     // set
-    void    setNumberOfDimensions(int inputNumberOfDimensions);
-    void    setNumberOfParticles(int inputNumberOfParticles);
-    void    setOmega(double inputOmega);
-    void    setAlpha(vec inputAlpha);
+    void    setNumberOfDimensions(int inputNumberOfDimensions)  {NumberOfDimensions = inputNumberOfDimensions;}
+    void    setNumberOfParticles(int inputNumberOfParticles)    {NumberOfParticles = inputNumberOfParticles;}
+    void    setOmega(double inputOmega)                         {Omega = inputOmega;}
+    void    setAlpha(vec inputAlpha)                            {Alpha = inputAlpha;}
+    void    setRandomSeed(long int inputRandomSeed)             {RandomSeed = inputRandomSeed;}
+    void    setStepLength(double inputStepLength)               {StepLength = inputStepLength;}
+    void    initializePositions();
 
-    // set
-    void    setRandomSeed(long int inputRandomSeed);
-    void    setStepLength(double inputStepLength);
-
-    // run
-    void    startMonteCarlo();
-
+    // RUN
+    void    initializeMonteCarlo(int inputNumberOfCycles, int inputNumberOfVariations);
+    bool    newStepMetropolis();
+    void    runMonteCarlo();
 
     // CLASS INHERITANCE AND OTHER:
     void    setTrialWavefunction(TrialWavefunction* inputWavefunction);
     void    setHamiltonian(Hamiltonian* inputHamiltonian);
-    void    initializeMetropolis(Metropolis *inputMonteCarloMethod, int inputNumberOfCycles, int inputNumberOfVariations);
     TrialWavefunction* getWavefunction()    {return Wavefunction;}
-    Metropolis* getMonteCarloMethod()       {return MonteCarloMethod;}
     Hamiltonian* getHamiltonian()           {return TypeHamiltonian;}
 
 

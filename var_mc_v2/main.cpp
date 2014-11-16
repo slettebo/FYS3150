@@ -3,11 +3,12 @@
 #include "time.h"
 #include "lib.h"
 #include "System.h"
-#include "metropolis.h"
 #include "TrialWavefunction.h"
 #include "NonInteractingWavefunction.h"
+#include "interactingwavefunction.h"
 #include "hamiltonian.h"
 #include "harmonicoscillatorwithoutcoloumb.h"
+#include "HarmonicOscillatorWithColoumb.h"
 #include <armadillo>
 #include <iomanip>
 using namespace std;
@@ -32,7 +33,7 @@ int main()
     // MONTE CARLO PARAMETERS:
     //------------------------
     int N_variations = 1;         // number of different variational parameters
-    int N_cycles = 1e6;           // no. of monte carlo cycles
+    int N_cycles = 1e4;           // no. of monte carlo cycles
     double step_length = 1.7;       // set to approximately 50% acceptance rate
 
     // RANDOM NUMBER SEED:
@@ -67,16 +68,16 @@ int main()
     mySystem.setAlpha(alpha2);
     mySystem.setStepLength(step_length);
     mySystem.setRandomSeed(idum);
-    mySystem.setTrialWavefunction(new NonInteractingWavefunction);
-    mySystem.setHamiltonian(new HarmonicOscillatorWithoutColoumb);
-    mySystem.initializeMetropolis(new Metropolis(N_cycles, N_variations), N_cycles, N_variations);
-    mySystem.startMonteCarlo();
-
+//    mySystem.setTrialWavefunction(new NonInteractingWavefunction);
+    mySystem.setTrialWavefunction(new InteractingWavefunction);
+    mySystem.setHamiltonian(new HarmonicOscillatorWithColoumb);
+    mySystem.initializeMonteCarlo(N_cycles, N_variations);
+    mySystem.runMonteCarlo();
     vec E, E2, NA, V;
-    E = mySystem.getMonteCarloMethod()->getX();
-    E2 = mySystem.getMonteCarloMethod()->getX2();
-    V = mySystem.getMonteCarloMethod()->getVariance();
-    NA = mySystem.getMonteCarloMethod()->getNumberOfAcceptedSteps();
+    E = mySystem.getEnergy();
+    E2 = mySystem.getEnergySquared();
+    V = mySystem.getVariance();
+    NA = mySystem.getNumberOfAcceptedSteps();
     cout << "Energy = " << E << ". Energy^2 = " << E2 << ". Variance = " << V << ". Acceptance rate = " << NA/N_cycles*100 << endl;
 
     return 0;

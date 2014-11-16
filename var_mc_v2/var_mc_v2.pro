@@ -3,6 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+LIBS += -llapack -lblas -larmadillo -lunittest++
+
 SOURCES += main.cpp \
     lib.cpp \
     System.cpp \
@@ -12,7 +14,8 @@ SOURCES += main.cpp \
     NonInteractingWavefunction.cpp \
     hamiltonian.cpp \
     harmonicoscillatorwithoutcoloumb.cpp \
-    interactingwavefunction.cpp
+    interactingwavefunction.cpp \
+    HarmonicOscillatorWithColoumb.cpp
 
 HEADERS += \
     lib.h \
@@ -23,5 +26,6 @@ HEADERS += \
     NonInteractingWavefunction.h \
     hamiltonian.h \
     harmonicoscillatorwithoutcoloumb.h \
-    interactingwavefunction.h
+    interactingwavefunction.h \
+    HarmonicOscillatorWithColoumb.h
 

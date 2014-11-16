@@ -11,7 +11,9 @@ protected:
     double  OldWavefunction;
     double  Omega;
     double  Alpha;
+    double  Beta;
     vec     AlphaArray;
+    vec     BetaArray;
 
 public:
     TrialWavefunction();
@@ -33,6 +35,5 @@ public:
     void    setAlphaArray(vec inputAlphaArray)                  {AlphaArray = inputAlphaArray;}
     void    setAlpha(int inputIndex)                            {Alpha = AlphaArray(inputIndex);}
     void    setOldWavefunction(double OldValue)                 {OldWavefunction = OldValue;}
-
 
 };
