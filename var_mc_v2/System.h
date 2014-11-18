@@ -13,10 +13,12 @@ private:
     int                 NumberOfParticles;
     double              Omega;
     vec                 Alpha;
+    vec                 Beta;
     TrialWavefunction   *Wavefunction;
     mat                 OldPosition;
     mat                 NewPosition;
-    mat                 RelativePosition;
+    mat                 OldRelativePosition;
+    mat                 NewRelativePosition;
     mat                 a;
 
     // HAMILTONIAN STUFF:
@@ -27,12 +29,12 @@ private:
     int                 NumberOfVariations;
     long int            RandomSeed;
     double              StepLength;
-    vec                 NumberOfAcceptedSteps;
+    mat                 NumberOfAcceptedSteps;
 
     // PHYSICAL SYSTEM STUFF
-    vec                 Energy;
-    vec                 EnergySquared;
-    vec                 Variance;
+    mat                 Energy;
+    mat                 EnergySquared;
+    mat                 Variance;
 
 
 public:
@@ -46,16 +48,18 @@ public:
     int     getNumberOfParticles()      {return NumberOfParticles;}
     double  getOmega()                  {return Omega;}
     vec     getAlpha()                  {return Alpha;}
-    vec     getEnergy()                 {return Energy;}
-    vec     getEnergySquared()          {return EnergySquared;}
-    vec     getVariance()               {return Variance;}
-    vec     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
+    vec     getBeta()                   {return Beta;}
+    mat     getEnergy()                 {return Energy;}
+    mat     getEnergySquared()          {return EnergySquared;}
+    mat     getVariance()               {return Variance;}
+    mat     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
 
     // set
     void    setNumberOfDimensions(int inputNumberOfDimensions)  {NumberOfDimensions = inputNumberOfDimensions;}
     void    setNumberOfParticles(int inputNumberOfParticles)    {NumberOfParticles = inputNumberOfParticles;}
     void    setOmega(double inputOmega)                         {Omega = inputOmega;}
     void    setAlpha(vec inputAlpha)                            {Alpha = inputAlpha;}
+    void    setBeta(vec inputBeta)                              {Beta = inputBeta;}
     void    setRandomSeed(long int inputRandomSeed)             {RandomSeed = inputRandomSeed;}
     void    setStepLength(double inputStepLength)               {StepLength = inputStepLength;}
     void    initializePositions();

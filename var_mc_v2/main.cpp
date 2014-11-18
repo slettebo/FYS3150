@@ -3,12 +3,12 @@
 #include "time.h"
 #include "lib.h"
 #include "System.h"
-#include "TrialWavefunction.h"
-#include "NonInteractingWavefunction.h"
-#include "interactingwavefunction.h"
-#include "hamiltonian.h"
-#include "harmonicoscillatorwithoutcoloumb.h"
-#include "HarmonicOscillatorWithColoumb.h"
+#include "Wavefunctions/TrialWavefunction.h"
+#include "Wavefunctions/NonInteractingWavefunction.h"
+#include "Wavefunctions/InteractingWavefunction.h"
+#include "Hamiltonians/Hamiltonian.h"
+#include "Hamiltonians/HarmonicOscillatorWithoutCoulomb.h"
+#include "Hamiltonians/HarmonicOscillatorWithCoulomb.h"
 #include <armadillo>
 #include <iomanip>
 using namespace std;
@@ -49,36 +49,89 @@ int main()
     double omega = 1.0;
 
 
+
     // VARIATIONAL PARAMETERS:
     //------------------------
-    double alpha = 1.0*omega;
-    vec alpha2;
-    double alphamin = 0.5*omega;
+
+    // ALPHA PARAMETER:
+    //-----------------
+    vec alpha;
+    double alpha0 = 1.0*omega;
+    double alphamin = 0.5*alpha0;
     double alphamax = alphamin + (0.1*(N_variations-1));
-    alpha2 = linspace(alpha, alpha, N_variations);
-    double beta = 1.0;
-    cout << "alpha=" << alpha2 << endl;
+    alpha = linspace(alpha0, alpha0, N_variations);
+//    alpha = linspace(alphamin, alphamax, N_variations);
+
+    // BETA PARAMETER:
+    //-----------------
+    vec beta;
+    double beta0 = 0.01;
+    double betamin = 0.5*beta0;
+    double betamax = betamin + (0.1*(N_variations-1));
+    beta = linspace(beta0, beta0, N_variations);
+//    beta = linspace(betamin, betamax, N_variations);
+
+    cout << "alpha" << alpha << "beta" << beta << endl;
 
 
+    // INITIALIZING PHYSICAL SYSTEM:
+    //------------------------------
 
     System mySystem;
     mySystem.setNumberOfDimensions(N_dimensions);
     mySystem.setNumberOfParticles(N_particles);
     mySystem.setOmega(omega);
-    mySystem.setAlpha(alpha2);
+    mySystem.setAlpha(alpha);
+    mySystem.setBeta(beta);
     mySystem.setStepLength(step_length);
     mySystem.setRandomSeed(idum);
-//    mySystem.setTrialWavefunction(new NonInteractingWavefunction);
+
+
+    // CHOICE OF HAMILTONIAN & WAVEFUNCTIONS:
+    int type = 2;
+
+
+    // TYPE 1: NON-INTERACTING CASE:
+    //------------------------------
+    if (type == 1)
+    {
+        mySystem.setTrialWavefunction(new NonInteractingWavefunction);
+        mySystem.setHamiltonian(new HarmonicOscillatorWithoutCoulomb);
+    }
+
+    // INTERACTING CASE:
+    //------------------------------
+    if (type == 2)
+    {
     mySystem.setTrialWavefunction(new InteractingWavefunction);
-    mySystem.setHamiltonian(new HarmonicOscillatorWithColoumb);
+    mySystem.setHamiltonian(new HarmonicOscillatorWithCoulomb);
+    }
+
     mySystem.initializeMonteCarlo(N_cycles, N_variations);
     mySystem.runMonteCarlo();
-    vec E, E2, NA, V;
+    mat E, E2, NA, V;
     E = mySystem.getEnergy();
     E2 = mySystem.getEnergySquared();
     V = mySystem.getVariance();
     NA = mySystem.getNumberOfAcceptedSteps();
     cout << "Energy = " << E << ". Energy^2 = " << E2 << ". Variance = " << V << ". Acceptance rate = " << NA/N_cycles*100 << endl;
+
+
+    // WRITING RESULTS TO FILE FOR PLOTTING IN PYTHON:
+
+    // NONINTERACTING CASE: (TYPE 1)
+    //---------------------------
+    char *noninteracting_energy = new char[1000];
+    sprintf(noninteracting_energy, "noninteracting_E.dat");
+    E.save(noninteracting_energy, raw_ascii);
+
+    char *noninteracting_alpha = new char[1000];
+    sprintf(noninteracting_alpha, "noninteracting_alpha.dat");
+    alpha.save(noninteracting_alpha, raw_ascii);
+
+    char *noninteracting_beta = new char[1000];
+    sprintf(noninteracting_beta, "noninteracting_beta.dat");
+    beta.save(noninteracting_beta, raw_ascii);
 
     return 0;
 }

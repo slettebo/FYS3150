@@ -7,7 +7,7 @@ NonInteractingWavefunction::NonInteractingWavefunction(void){
 
 }
 
-double NonInteractingWavefunction::evaluateWavefunction(mat r){
+double NonInteractingWavefunction::evaluateWavefunction(mat r, mat r_rel){
     int i;
     double argument = 0;
     double wf = 0;

@@ -1,6 +1,6 @@
 //#include "metropolis.h"
 //#include "TrialWavefunction.h"
-//#include "hamiltonian.h"
+//#include "Hamiltonian.h"
 //#include "lib.h"
 //#include <armadillo>
 

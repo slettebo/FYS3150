@@ -14,11 +14,12 @@ protected:
     double  Beta;
     vec     AlphaArray;
     vec     BetaArray;
+    mat     a;
 
 public:
     TrialWavefunction();
 
-    virtual double evaluateWavefunction(mat) = 0;
+    virtual double evaluateWavefunction(mat,mat) = 0;
 
     // GET:
     //-----
@@ -33,7 +34,10 @@ public:
     void    setNumberOfParticles(int inputNumberOfParticles)    {NumberOfParticles = inputNumberOfParticles;}
     void    setOmega(double inputOmega)                         {Omega = inputOmega;}
     void    setAlphaArray(vec inputAlphaArray)                  {AlphaArray = inputAlphaArray;}
-    void    setAlpha(int inputIndex)                            {Alpha = AlphaArray(inputIndex);}
+    void    setBetaArray(vec inputBetaArray)                    {BetaArray = inputBetaArray;}
+    void    setAlpha(int inputIndexAlpha)                       {Alpha = AlphaArray(inputIndexAlpha);}
+    void    setBeta(int inputIndexBeta)                         {Beta = BetaArray(inputIndexBeta);}
     void    setOldWavefunction(double OldValue)                 {OldWavefunction = OldValue;}
+    void    setA(mat inputA)                                    {a = inputA;}
 
 };

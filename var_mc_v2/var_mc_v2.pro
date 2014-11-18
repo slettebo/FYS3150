@@ -8,24 +8,24 @@ LIBS += -llapack -lblas -larmadillo -lunittest++
 SOURCES += main.cpp \
     lib.cpp \
     System.cpp \
-    electron.cpp \
-    metropolis.cpp \
-    TrialWavefunction.cpp \
-    NonInteractingWavefunction.cpp \
-    hamiltonian.cpp \
-    harmonicoscillatorwithoutcoloumb.cpp \
-    interactingwavefunction.cpp \
-    HarmonicOscillatorWithColoumb.cpp
+    Wavefunctions/TrialWavefunction.cpp \
+    Wavefunctions/NonInteractingWavefunction.cpp \
+    Wavefunctions/InteractingWavefunction.cpp \
+    Hamiltonians/HarmonicOscillatorWithColoumb.cpp \
+    Hamiltonians/Hamiltonian.cpp \
+    Hamiltonians/HarmonicOscillatorWithoutCoulomb.cpp \
+    Wavefunctions/Phi.cpp
+
 
 HEADERS += \
     lib.h \
     System.h \
-    electron.h \
-    metropolis.h \
-    TrialWavefunction.h \
-    NonInteractingWavefunction.h \
-    hamiltonian.h \
-    harmonicoscillatorwithoutcoloumb.h \
-    interactingwavefunction.h \
-    HarmonicOscillatorWithColoumb.h
+    Wavefunctions/TrialWavefunction.h \
+    Wavefunctions/NonInteractingWavefunction.h \
+    Wavefunctions/InteractingWavefunction.h \
+    Hamiltonians/Hamiltonian.h \
+    Hamiltonians/HarmonicOscillatorWithCoulomb.h \
+    Hamiltonians/HarmonicOscillatorWithoutCoulomb.h \
+    Wavefunctions/Phi.h
+
 
