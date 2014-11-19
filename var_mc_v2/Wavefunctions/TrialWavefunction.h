@@ -15,11 +15,13 @@ protected:
     vec     AlphaArray;
     vec     BetaArray;
     mat     a;
+    mat     n;
 
 public:
     TrialWavefunction();
 
-    virtual double evaluateWavefunction(mat,mat) = 0;
+    virtual double evaluateWavefunction(mat) = 0;
+    virtual void    constructSlaterMatrix() {};
 
     // GET:
     //-----
@@ -39,5 +41,6 @@ public:
     void    setBeta(int inputIndexBeta)                         {Beta = BetaArray(inputIndexBeta);}
     void    setOldWavefunction(double OldValue)                 {OldWavefunction = OldValue;}
     void    setA(mat inputA)                                    {a = inputA;}
+    void    setN(mat inputN)                                    {n = inputN;}
 
 };

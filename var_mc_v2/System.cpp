@@ -10,9 +10,8 @@ void System::initializePositions()
 {
     OldPosition = Mat<double>( NumberOfParticles, NumberOfDimensions );
     NewPosition = Mat<double>( NumberOfParticles, NumberOfDimensions );
-    OldRelativePosition = Mat<double>( NumberOfParticles, NumberOfParticles );
-    NewRelativePosition = Mat<double>( NumberOfParticles, NumberOfParticles );
     a = Mat<double>( NumberOfParticles, NumberOfParticles );
+    mat n = zeros(NumberOfParticles, NumberOfDimensions);
 
     //setting a random initial position:
     int i, j;
@@ -27,15 +26,11 @@ void System::initializePositions()
 
     double N2 = float(NumberOfParticles)/2; // used for setting the a-variable in the jastrow factor
 
-    //calculating the relative distances for the initial position:
-
+    // SETTING THE a-factor:
     for (i=0; i<NumberOfParticles-1; i++)
     {
         for (j=i+1; j<NumberOfParticles; j++)
         {
-            OldRelativePosition(i,j) = norm(OldPosition.row(i).t() - OldPosition.row(j).t());
-
-            // SETTING THE a-factor:
             // if-test for PARALLELL SPIN ( 0,1,2 = spin up | 3,4,5 = spin down):
             // N2 == 1 -> TWO PARTICLES -> PARALLELL SPIN: a = 1.0
             if ( (N2 == 1 ) || (i < N2 && j < N2) ||  (i >= N2 && j >= N2) )
@@ -48,10 +43,34 @@ void System::initializePositions()
             }
         }
     }
+
+
+    // CREATING ENERGY STATE MATRIX (FOR 6 ELECTRONS):
+    if (NumberOfParticles == 6)
+    {
+        for (i=0; i<NumberOfParticles; i++)
+        {
+            if (i == 0 || i == 3)
+            {
+                n(i,0) = n(i,1) = 0; // nx = ny = 0
+            }
+            if (i == 1 || i == 4)
+            {
+                n(i,0) = 1; // nx = 1
+            }
+            if (i == 2 || i == 5)
+            {
+                n(i,1) = 1; // ny = 1
+            }
+        }
+    }
+
     // THIS MEANS THAT RelativePosition(i,j) is the relative distance between particle i+1 and j.+1
     // so: r(0,1) = r12 . r(0,2) = r13 . r(1,2) = r23 . etc...
+
     Wavefunction->setA(a);
-    Wavefunction->setOldWavefunction(Wavefunction->evaluateWavefunction(OldPosition, OldRelativePosition));
+    Wavefunction->setN(n);
+    Wavefunction->setOldWavefunction(Wavefunction->evaluateWavefunction(OldPosition));
 }
 
 
@@ -69,24 +88,14 @@ bool System::newStepMetropolis()
                 }
         }
 
-    //calculating the relative distances for the new step:
-    for (i=0; i<NumberOfParticles-1; i++)
-    {
-        for (j=i+1; j<NumberOfParticles; j++)
-        {
-            NewRelativePosition(i,j) = norm(NewPosition.row(i).t() - NewPosition.row(j).t());
-        }
-    }
-
     // calculating new wave-function
-    wf_new = Wavefunction->evaluateWavefunction(NewPosition, NewRelativePosition);
+    wf_new = Wavefunction->evaluateWavefunction(NewPosition);
     wf_old = Wavefunction->getOldWavefunction();
 
     // metropolis test:
     if(ran2(&RandomSeed) <= (wf_new*wf_new)/(wf_old*wf_old))    // STEP ACCEPTED
         {
             OldPosition = NewPosition;
-            OldRelativePosition = NewRelativePosition;
             Wavefunction->setOldWavefunction(wf_new);
             return true;
         }
@@ -115,7 +124,7 @@ void System::runMonteCarlo()
                 bool Accepted = newStepMetropolis();
                 if (Accepted)
                 {
-                    dx = TypeHamiltonian->evaluateLocalEnergy(OldPosition, OldRelativePosition);
+                    dx = TypeHamiltonian->evaluateLocalEnergy(OldPosition);
                     I += dx;
                     I2 += dx*dx;
                     NOA++;
@@ -152,7 +161,10 @@ void System::setTrialWavefunction(TrialWavefunction *inputWavefunction){
     Wavefunction->setNumberOfParticles(NumberOfParticles);
     Wavefunction->setOmega(Omega);
     Wavefunction->setAlphaArray(Alpha);
+    Wavefunction->setAlpha(0);
     Wavefunction->setBetaArray(Beta);
+    Wavefunction->setBeta(0);
+    Wavefunction->constructSlaterMatrix();  // not too fond of this implementation, but it works.
     initializePositions();
 }
 

@@ -6,6 +6,7 @@
 #include "Wavefunctions/TrialWavefunction.h"
 #include "Wavefunctions/NonInteractingWavefunction.h"
 #include "Wavefunctions/InteractingWavefunction.h"
+#include "Wavefunctions/Phi.h"
 #include "Hamiltonians/Hamiltonian.h"
 #include "Hamiltonians/HarmonicOscillatorWithoutCoulomb.h"
 #include "Hamiltonians/HarmonicOscillatorWithCoulomb.h"
@@ -32,9 +33,9 @@ int main()
 
     // MONTE CARLO PARAMETERS:
     //------------------------
-    int N_variations = 1;         // number of different variational parameters
-    int N_cycles = 1e4;           // no. of monte carlo cycles
-    double step_length = 1.7;       // set to approximately 50% acceptance rate
+    int N_variations = 10;         // number of different variational parameters
+    int N_cycles = 1e5;           // no. of monte carlo cycles
+    double step_length;
 
     // RANDOM NUMBER SEED:
     //-------------------------
@@ -44,11 +45,7 @@ int main()
 
     // WAVEFUNCTION PARAMETERS:
     //-------------------------
-    int N_dimensions = 2;
-    int N_particles = 2;
     double omega = 1.0;
-
-
 
     // VARIATIONAL PARAMETERS:
     //------------------------
@@ -59,17 +56,17 @@ int main()
     double alpha0 = 1.0*omega;
     double alphamin = 0.5*alpha0;
     double alphamax = alphamin + (0.1*(N_variations-1));
-    alpha = linspace(alpha0, alpha0, N_variations);
-//    alpha = linspace(alphamin, alphamax, N_variations);
+//    alpha = linspace(alpha0, alpha0, N_variations);
+    alpha = linspace(alphamin, alphamax, N_variations);
 
     // BETA PARAMETER:
     //-----------------
     vec beta;
-    double beta0 = 0.01;
+    double beta0 = 1.0;
     double betamin = 0.5*beta0;
     double betamax = betamin + (0.1*(N_variations-1));
-    beta = linspace(beta0, beta0, N_variations);
-//    beta = linspace(betamin, betamax, N_variations);
+//    beta = linspace(beta0, beta0, N_variations);
+    beta = linspace(betamin, betamax, N_variations);
 
     cout << "alpha" << alpha << "beta" << beta << endl;
 
@@ -78,33 +75,59 @@ int main()
     //------------------------------
 
     System mySystem;
-    mySystem.setNumberOfDimensions(N_dimensions);
-    mySystem.setNumberOfParticles(N_particles);
+    mySystem.setNumberOfDimensions(2);
     mySystem.setOmega(omega);
     mySystem.setAlpha(alpha);
     mySystem.setBeta(beta);
-    mySystem.setStepLength(step_length);
     mySystem.setRandomSeed(idum);
 
 
     // CHOICE OF HAMILTONIAN & WAVEFUNCTIONS:
-    int type = 2;
+    int type = 4;
 
 
-    // TYPE 1: NON-INTERACTING CASE:
-    //------------------------------
+    // TYPE 1: 2 ELECTRONS NON-INTERACTING CASE:
+    //------------------------------------------
     if (type == 1)
     {
+        mySystem.setNumberOfParticles(2);
+        step_length = 1.7;       // set to approximately 50% acceptance rate
+        mySystem.setStepLength(step_length);
         mySystem.setTrialWavefunction(new NonInteractingWavefunction);
         mySystem.setHamiltonian(new HarmonicOscillatorWithoutCoulomb);
     }
 
-    // INTERACTING CASE:
-    //------------------------------
+    // TYPE 2: 6 ELECTRONS NON-INTERACTING CASE:
+    //------------------------------------------
     if (type == 2)
     {
-    mySystem.setTrialWavefunction(new InteractingWavefunction);
-    mySystem.setHamiltonian(new HarmonicOscillatorWithCoulomb);
+        mySystem.setNumberOfParticles(6);
+        step_length = 0.95;       // set to approximately 50% acceptance rate
+        mySystem.setStepLength(step_length);
+        mySystem.setTrialWavefunction(new NonInteractingWavefunction);
+        mySystem.setHamiltonian(new HarmonicOscillatorWithoutCoulomb);
+    }
+
+    // TYPE 3: 2 ELECTRONS INTERACTING CASE:
+    //--------------------------------------
+    if (type == 3)
+    {
+        mySystem.setNumberOfParticles(2);
+        step_length = 1.8;       // set to approximately 50% acceptance rate
+        mySystem.setStepLength(step_length);
+        mySystem.setTrialWavefunction(new InteractingWavefunction);
+        mySystem.setHamiltonian(new HarmonicOscillatorWithCoulomb);
+    }
+
+    // TYPE 4: 6 ELECTRONS INTERACTING CASE:
+    //------------------------------
+    if (type == 4)
+    {
+        mySystem.setNumberOfParticles(6);
+        step_length = 0.90;       // set to approximately 50% acceptance rate
+        mySystem.setStepLength(step_length);
+        mySystem.setTrialWavefunction(new Phi);
+        mySystem.setHamiltonian(new HarmonicOscillatorWithCoulomb);
     }
 
     mySystem.initializeMonteCarlo(N_cycles, N_variations);
@@ -114,7 +137,8 @@ int main()
     E2 = mySystem.getEnergySquared();
     V = mySystem.getVariance();
     NA = mySystem.getNumberOfAcceptedSteps();
-    cout << "Energy = " << E << ". Energy^2 = " << E2 << ". Variance = " << V << ". Acceptance rate = " << NA/N_cycles*100 << endl;
+    cout << "Number of particles = " << mySystem.getNumberOfParticles() << endl;
+    cout << "Energy" << E << "Energy^2 = " << E2 << "Variance = " << V << "Acceptance rate = " << NA/N_cycles*100 << endl;
 
 
     // WRITING RESULTS TO FILE FOR PLOTTING IN PYTHON:

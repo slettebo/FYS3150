@@ -17,8 +17,8 @@ private:
     TrialWavefunction   *Wavefunction;
     mat                 OldPosition;
     mat                 NewPosition;
-    mat                 OldRelativePosition;
-    mat                 NewRelativePosition;
+//    mat                 OldRelativePosition;
+//    mat                 NewRelativePosition;
     mat                 a;
 
     // HAMILTONIAN STUFF:

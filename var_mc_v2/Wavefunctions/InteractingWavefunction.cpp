@@ -6,11 +6,11 @@ InteractingWavefunction::InteractingWavefunction()
 {
 }
 
-double InteractingWavefunction::evaluateWavefunction(mat r, mat r_rel){
+double InteractingWavefunction::evaluateWavefunction(mat r){
 
     // get the non-interacting part of the wavefunction:
-    double noninteracting = NonInteractingWavefunction::evaluateWavefunction(r,r_rel);
-
+    double noninteracting = NonInteractingWavefunction::evaluateWavefunction(r);
+    double rij;
 
     // compute jastrow factor:
     int i,j;
@@ -19,7 +19,7 @@ double InteractingWavefunction::evaluateWavefunction(mat r, mat r_rel){
     {
         for (j=i+1; j<NumberOfParticles; j++)
         {
-            double rij = r_rel(i,j);
+            rij = norm(r.row(i).t() - r.row(j).t());
             jastrow += (rij)/(1.0 + Beta*(rij));
         }
     }

@@ -7,6 +7,7 @@ class Phi : public InteractingWavefunction
 {
 
 private:
+    mat SlaterMatrix;
     mat SlaterMatrixUp;
     mat SlaterMatrixDown;
 
@@ -14,6 +15,7 @@ public:
     Phi();   // constructor
 
     double  hermitePolynomial(int i, double z);
-//    double  evaluateWavefunction(mat r, mat r_rel);
+    double  evaluateWavefunction(mat r);
+    void    constructSlaterMatrix();
 };
 

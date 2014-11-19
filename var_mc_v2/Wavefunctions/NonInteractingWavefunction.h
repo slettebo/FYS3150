@@ -8,6 +8,6 @@ class NonInteractingWavefunction : public TrialWavefunction{
 public:
     NonInteractingWavefunction();   // constructor
 
-    double  evaluateWavefunction(mat r, mat r_rel);
+    double  evaluateWavefunction(mat r);
 };
 

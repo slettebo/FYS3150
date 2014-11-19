@@ -3,11 +3,11 @@
 #include <armadillo>
 using namespace arma;
 
-NonInteractingWavefunction::NonInteractingWavefunction(void){
-
+NonInteractingWavefunction::NonInteractingWavefunction()
+{
 }
 
-double NonInteractingWavefunction::evaluateWavefunction(mat r, mat r_rel){
+double NonInteractingWavefunction::evaluateWavefunction(mat r){
     int i;
     double argument = 0;
     double wf = 0;

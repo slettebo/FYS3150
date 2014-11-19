@@ -15,7 +15,7 @@ public:
     Hamiltonian();
 
     virtual void    setTrialWavefunction(TrialWavefunction* inputWavefunction) = 0;
-    virtual double  evaluateLocalEnergy(mat r, mat r_rel);
+    virtual double  evaluateLocalEnergy(mat r);
 
 };
 
