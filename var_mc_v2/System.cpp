@@ -2,6 +2,7 @@
 #include "Wavefunctions/TrialWavefunction.h"
 #include "Hamiltonians/Hamiltonian.h"
 #include "lib.h"
+#include "omp.h"
 
 System::System(){
 }
@@ -15,37 +16,40 @@ void System::initializePositions()
 
     //setting a random initial position:
     int i, j;
-    for (i=0; i<NumberOfParticles; i++)
-    {
-        for (j=0; j<NumberOfDimensions; j++)
+//    #pragma omp parallel for
+        for (i=0; i<NumberOfParticles; i++)
         {
-            OldPosition(i,j) = StepLength*(ran0(&RandomSeed)-0.5);
+            for (j=0; j<NumberOfDimensions; j++)
+            {
+                OldPosition(i,j) = StepLength*(ran0(&RandomSeed)-0.5);
+            }
         }
-    }
-
 
     double N2 = float(NumberOfParticles)/2; // used for setting the a-variable in the jastrow factor
 
     // SETTING THE a-factor:
-    for (i=0; i<NumberOfParticles-1; i++)
-    {
-        for (j=i+1; j<NumberOfParticles; j++)
+//    #pragma omp parallel for
+        for (i=0; i<NumberOfParticles-1; i++)
         {
-            // if-test for PARALLELL SPIN ( 0,1,2 = spin up | 3,4,5 = spin down):
-            // N2 == 1 -> TWO PARTICLES -> PARALLELL SPIN: a = 1.0
-            if ( (N2 == 1 ) || (i < N2 && j < N2) ||  (i >= N2 && j >= N2) )
+            for (j=i+1; j<NumberOfParticles; j++)
             {
-                a(i,j) = 1.0;
-            }
-            else // ANTI-PARALLELL SPIN
-            {
-                a(i,j) = 1.0/3.0;
+                // if-test for PARALLELL SPIN ( 0,1,2 = spin up | 3,4,5 = spin down):
+                // N2 == 1 -> TWO PARTICLES -> PARALLELL SPIN: a = 1.0
+                if ( (N2 == 1 ) || (i < N2 && j < N2) ||  (i >= N2 && j >= N2) )
+                {
+                    a(i,j) = 1.0;
+                }
+                else // ANTI-PARALLELL SPIN
+                {
+                    a(i,j) = 1.0/3.0;
+                }
             }
         }
-    }
 
 
-    // CREATING ENERGY STATE MATRIX (FOR 6 ELECTRONS):
+
+    // CREATING ENERGY STATE MATRIX (FOR 6 ELECTRONS)
+    // FOR 2 ELECTRONS THIS WILL BE ZERO:
     if (NumberOfParticles == 6)
     {
         for (i=0; i<NumberOfParticles; i++)
@@ -76,12 +80,14 @@ void System::initializePositions()
 
 bool System::newStepMetropolis()
 {
+
     int i, j;
     double wf_new, wf_old;
 
     // taking a new, random step
     for (i=0; i<NumberOfParticles; i++)
         {
+//            #pragma omp parallel for
             for (j=0; j<NumberOfDimensions; j++)
                 {
                     NewPosition(i,j) = OldPosition(i,j)+StepLength*(ran0(&RandomSeed)-0.5);
@@ -109,6 +115,7 @@ void System::runMonteCarlo()
 {
     int i, j, k, NOA;
     double I, I2, dx;
+
     for (i=0; i<NumberOfVariations; i++)    // LOOP OVER ALPHA VALUES
     {
         Wavefunction->setAlpha(i);

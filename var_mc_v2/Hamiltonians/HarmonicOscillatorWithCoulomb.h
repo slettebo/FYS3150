@@ -9,7 +9,6 @@ class HarmonicOscillatorWithCoulomb : public HarmonicOscillatorWithoutCoulomb{
 public:
     HarmonicOscillatorWithCoulomb();
 
-
     void    setTrialWavefunction(TrialWavefunction *inputWavefunction);
     double  evaluateLocalEnergy(mat r);
 

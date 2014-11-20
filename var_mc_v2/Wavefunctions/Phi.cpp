@@ -41,6 +41,7 @@ double Phi::evaluateWavefunction(mat r){
 
         if (i < NumberOfParticles/2)
         {
+//            #pragma omp parallel for
             for (j=0; j<NumberOfParticles/2; j++)
             {
                 argument = exp(-Alpha*Omega*(x*x + y*y)/2.0);
@@ -49,16 +50,18 @@ double Phi::evaluateWavefunction(mat r){
         }
         else
         {
+//            #pragma omp parallel for
             for (k=NumberOfParticles/2; k<NumberOfParticles; k++)
             {
                 argument = exp(-Alpha*Omega*(x*x + y*y)/2.0);
-                SlaterMatrixDown(i-3,k-3) = hermitePolynomial(n(k,0),x)*hermitePolynomial(n(k,1),y)*argument;
+                SlaterMatrixDown(i-NumberOfParticles/2,k-NumberOfParticles/2) = hermitePolynomial(n(k,0),x)*hermitePolynomial(n(k,1),y)*argument;
             }
         }
 
     }
 
     double jastrow = 0;
+//    #pragma omp parallel for
     for (i=0; i<NumberOfParticles-1; i++)
     {
         for (j=i+1; j<NumberOfParticles; j++)
@@ -68,12 +71,10 @@ double Phi::evaluateWavefunction(mat r){
         }
     }
 
+    cout << "slater-det" << det(SlaterMatrixUp)*det(SlaterMatrixDown) << endl;
+    cout << "noninteracting" << NonInteractingWavefunction::evaluateWavefunction(r) << endl;
+
     value = det(SlaterMatrixUp)*det(SlaterMatrixDown)*exp(jastrow);
     return value;
 }
 
-void Phi::constructSlaterMatrix(){
-    SlaterMatrix = mat(NumberOfParticles,NumberOfParticles);
-    SlaterMatrixUp = mat(NumberOfParticles/2,NumberOfParticles/2);
-    SlaterMatrixDown = mat(NumberOfParticles/2,NumberOfParticles/2);
-}

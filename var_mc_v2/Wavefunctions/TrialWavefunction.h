@@ -12,23 +12,30 @@ protected:
     double  Omega;
     double  Alpha;
     double  Beta;
+    double  Jastrow;
+    vec     rSingleParticle;
+    mat     rij;
     vec     AlphaArray;
     vec     BetaArray;
     mat     a;
     mat     n;
+    mat     SlaterMatrix;
+    mat     SlaterMatrixUp;
+    mat     SlaterMatrixDown;
 
 public:
     TrialWavefunction();
 
-    virtual double evaluateWavefunction(mat) = 0;
-    virtual void    constructSlaterMatrix() {};
+    virtual double  evaluateWavefunction(mat) = 0;
+    virtual void    constructSlaterMatrix() {}
 
     // GET:
     //-----
     int     getNumberOfDimensions()             {return NumberOfDimensions;}
     int     getNumberOfParticles()              {return NumberOfParticles;}
     double  getOldWavefunction()                {return OldWavefunction;}
-
+    vec     getrSingleParticle()                {return rSingleParticle;}
+    mat     getrij()                            {return rij;}
 
     // SET:
     //-----

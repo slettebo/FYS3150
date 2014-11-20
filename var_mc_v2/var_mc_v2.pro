@@ -3,7 +3,11 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -llapack -lblas -larmadillo -lunittest++
+LIBS += -llapack -lblas -larmadillo -lunittest++ -fopenmp
+
+QMAKE_LFLAGS += -fopenmp
+QMAKE_CXXFLAGS += -fopenmp
+
 
 SOURCES += main.cpp \
     lib.cpp \
@@ -13,8 +17,7 @@ SOURCES += main.cpp \
     Wavefunctions/InteractingWavefunction.cpp \
     Hamiltonians/HarmonicOscillatorWithColoumb.cpp \
     Hamiltonians/Hamiltonian.cpp \
-    Hamiltonians/HarmonicOscillatorWithoutCoulomb.cpp \
-    Wavefunctions/Phi.cpp
+    Hamiltonians/HarmonicOscillatorWithoutCoulomb.cpp
 
 
 HEADERS += \
@@ -25,7 +28,6 @@ HEADERS += \
     Wavefunctions/InteractingWavefunction.h \
     Hamiltonians/Hamiltonian.h \
     Hamiltonians/HarmonicOscillatorWithCoulomb.h \
-    Hamiltonians/HarmonicOscillatorWithoutCoulomb.h \
-    Wavefunctions/Phi.h
+    Hamiltonians/HarmonicOscillatorWithoutCoulomb.h
 
 

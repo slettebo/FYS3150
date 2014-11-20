@@ -8,7 +8,6 @@ class HarmonicOscillatorWithoutCoulomb : public Hamiltonian{
 public:
     HarmonicOscillatorWithoutCoulomb();
 
-
     void    setTrialWavefunction(TrialWavefunction *inputWavefunction);
     double  evaluateLocalEnergy(mat r);
 
