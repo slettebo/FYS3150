@@ -6,13 +6,16 @@ Hamiltonian::Hamiltonian()
     h2 = 1.0/(h*h);
 }
 
+Hamiltonian::~Hamiltonian()
+{
+}
+
 
 double Hamiltonian::evaluateLocalEnergy(mat r)
 {
     double wf_minus, wf_plus, e_kinetic;
     int N = Wavefunction->getNumberOfParticles();
     int M = Wavefunction->getNumberOfDimensions();
-
 
     // allocate matrices which contain the position of the particles
     // compute the kinetic energy:
@@ -25,6 +28,7 @@ double Hamiltonian::evaluateLocalEnergy(mat r)
     //-----------------------------
     e_kinetic = 0;
 
+//    cout << Wavefunction->getOldWavefunction();
     int i, j;
     for (i=0; i<N; i++)
     {

@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     Wavefunctions/InteractingWavefunction.cpp \
     Hamiltonians/HarmonicOscillatorWithColoumb.cpp \
     Hamiltonians/Hamiltonian.cpp \
-    Hamiltonians/HarmonicOscillatorWithoutCoulomb.cpp
+    Hamiltonians/HarmonicOscillatorWithoutCoulomb.cpp \
+    Hamiltonians/LocalEnergyClosedForm.cpp
 
 
 HEADERS += \
@@ -28,6 +29,7 @@ HEADERS += \
     Wavefunctions/InteractingWavefunction.h \
     Hamiltonians/Hamiltonian.h \
     Hamiltonians/HarmonicOscillatorWithCoulomb.h \
-    Hamiltonians/HarmonicOscillatorWithoutCoulomb.h
+    Hamiltonians/HarmonicOscillatorWithoutCoulomb.h \
+    Hamiltonians/LocalEnergyClosedForm.h
 
 

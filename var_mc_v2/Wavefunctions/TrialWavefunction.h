@@ -24,7 +24,8 @@ protected:
     mat     SlaterMatrixDown;
 
 public:
-    TrialWavefunction();
+    TrialWavefunction();    // constructor
+    ~TrialWavefunction();   // destructor
 
     virtual double  evaluateWavefunction(mat) = 0;
     virtual void    constructSlaterMatrix() {}

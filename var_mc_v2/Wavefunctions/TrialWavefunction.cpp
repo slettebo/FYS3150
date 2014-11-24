@@ -4,3 +4,6 @@ TrialWavefunction::TrialWavefunction()
 {
 }
 
+TrialWavefunction::~TrialWavefunction()
+{
+}

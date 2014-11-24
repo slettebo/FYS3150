@@ -23,6 +23,7 @@ double HarmonicOscillatorWithoutCoulomb::evaluateLocalEnergy(mat r)
     {
         e_potential += Wavefunction->getrSingleParticle()(i);
     }
+
     e_potential = 0.5*e_potential;
 
     return e_kinetic + e_potential;

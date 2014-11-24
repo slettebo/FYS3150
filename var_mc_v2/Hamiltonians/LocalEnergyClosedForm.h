@@ -4,7 +4,7 @@
 using namespace arma;
 // HAMILTONIAN MOTHER CLASS
 
-class Hamiltonian
+class LocalEnergyClosedForm
 {
 protected:
     double h;
@@ -12,11 +12,15 @@ protected:
     TrialWavefunction* Wavefunction;
 
 public:
-    Hamiltonian();  // constructor
-    ~Hamiltonian(); // destructor
+    LocalEnergyClosedForm();  // constructor
+    ~LocalEnergyClosedForm(); // destructor
 
     virtual void    setTrialWavefunction(TrialWavefunction* inputWavefunction) = 0;
     virtual double  evaluateLocalEnergy(mat r);
 
 };
+
+
+
+
 

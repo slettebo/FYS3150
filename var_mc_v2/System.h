@@ -17,9 +17,9 @@ private:
     TrialWavefunction   *Wavefunction;
     mat                 OldPosition;
     mat                 NewPosition;
-//    mat                 OldRelativePosition;
-//    mat                 NewRelativePosition;
     mat                 a;
+    mat                 QuantumForceOld;
+    mat                 QuantumForceNew;
 
     // HAMILTONIAN STUFF:
     Hamiltonian         *TypeHamiltonian;
@@ -39,6 +39,8 @@ private:
 
 public:
     System();   // constructor
+    System(const System& inputSystem); // copy constructor
+    ~System();  // destructor
 
 
     // WAVEFUNCTION STUFF:
@@ -53,6 +55,7 @@ public:
     mat     getEnergySquared()          {return EnergySquared;}
     mat     getVariance()               {return Variance;}
     mat     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
+    mat     getOldPosition()            {return OldPosition;}
 
     // set
     void    setNumberOfDimensions(int inputNumberOfDimensions)  {NumberOfDimensions = inputNumberOfDimensions;}
@@ -68,13 +71,16 @@ public:
     void    initializeMonteCarlo(int inputNumberOfCycles, int inputNumberOfVariations);
     bool    newStepMetropolis();
     void    runMonteCarlo();
+    double  gaussianDeviate(long int inputRandomSeed);
+    void    importanceSampling();
+    void    initializePositionsImportance();
+    void    newStepImportance();
+    void    quantumForce(mat r, mat &qforce, double wf);
 
     // CLASS INHERITANCE AND OTHER:
     void    setTrialWavefunction(TrialWavefunction* inputWavefunction);
     void    setHamiltonian(Hamiltonian* inputHamiltonian);
     TrialWavefunction* getWavefunction()    {return Wavefunction;}
     Hamiltonian* getHamiltonian()           {return TypeHamiltonian;}
-
-
 };
 

@@ -12,6 +12,7 @@
 #include "Hamiltonians/Hamiltonian.h"
 #include "Hamiltonians/HarmonicOscillatorWithoutCoulomb.h"
 #include "Hamiltonians/HarmonicOscillatorWithCoulomb.h"
+#include "Hamiltonians/LocalEnergyClosedForm.h"
 
 using namespace std;
 using namespace arma;
@@ -31,7 +32,7 @@ ullint unixTimeInMicroseconds() {
     return (ullint)ts.tv_sec * 1000000LL + (ullint)ts.tv_nsec / 1000LL;
 }
 
-
+//#pragma omp parallel
 int main()
 {
 
@@ -76,13 +77,13 @@ int main()
 
     // INITIALIZING PHYSICAL SYSTEM:
     //------------------------------
-
     System mySystem;
     mySystem.setNumberOfDimensions(2);
     mySystem.setOmega(omega);
     mySystem.setAlpha(alpha);
     mySystem.setBeta(beta);
     mySystem.setRandomSeed(idum);
+
 
 
     // CHOICE OF HAMILTONIAN & WAVEFUNCTIONS:
@@ -95,7 +96,8 @@ int main()
     {
         printf("2 ELECTRONS NON-INTERACTING CASE: \n---------------------------------\n");
         mySystem.setNumberOfParticles(2);
-        step_length = 1.7;       // set to approximately 50% acceptance rate
+//        step_length = 1.7;       // set to approximately 50% acceptance rate METROPOLIS BRUTE
+        step_length = 1e-3;        //importance
         mySystem.setStepLength(step_length);
         mySystem.setTrialWavefunction(new NonInteractingWavefunction);
         mySystem.setHamiltonian(new HarmonicOscillatorWithoutCoulomb);
@@ -106,7 +108,8 @@ int main()
     if (type == 2)
     {
         mySystem.setNumberOfParticles(6);
-        step_length = 0.95;       // set to approximately 50% acceptance rate
+//        step_length = 0.82;       // set to approximately 50% acceptance rate
+        step_length = 1e-3;        //importance
         mySystem.setStepLength(step_length);
         mySystem.setTrialWavefunction(new NonInteractingWavefunction);
         mySystem.setHamiltonian(new HarmonicOscillatorWithoutCoulomb);
@@ -117,7 +120,8 @@ int main()
     if (type == 3)
     {
         mySystem.setNumberOfParticles(2);
-        step_length = 1.8;       // set to approximately 50% acceptance rate
+//        step_length = 1.8;       // set to approximately 50% acceptance rate
+        step_length = 1e-3;        //importance
         mySystem.setStepLength(step_length);
         mySystem.setTrialWavefunction(new InteractingWavefunction);
         mySystem.setHamiltonian(new HarmonicOscillatorWithCoulomb);
@@ -128,22 +132,178 @@ int main()
     if (type == 4)
     {
         mySystem.setNumberOfParticles(6);
-        step_length = 0.90;       // set to approximately 50% acceptance rate
+//        step_length = 0.86;       // set to approximately 50% acceptance rate
+        step_length = 1e-3;        //importance
         mySystem.setStepLength(step_length);
         mySystem.setTrialWavefunction(new InteractingWavefunction);
         mySystem.setHamiltonian(new HarmonicOscillatorWithCoulomb);
     }
 
+    // INITIALIZING & RUNNING MONTE CARLO:
+    //--------------------------
     mySystem.initializeMonteCarlo(N_cycles, N_variations);
-    mySystem.runMonteCarlo();
+
+
+    mySystem.importanceSampling();
+
+    // GETTING RESULTS:
     mat E, E2, NA, V;
     E = mySystem.getEnergy();
     E2 = mySystem.getEnergySquared();
     V = mySystem.getVariance();
     NA = mySystem.getNumberOfAcceptedSteps();
+
+    // PRINTING RESULTS:
+    cout << "Number of M.C cycles = " << N_cycles << endl;
     cout << "alpha" << alpha << "beta" << beta << endl;
     cout << "Number of particles = " << mySystem.getNumberOfParticles() << endl;
     cout << "Energy" << E << "Energy^2 = " << E2 << "Variance = " << V << "Acceptance rate = " << NA/N_cycles*100 << endl;
+//    cout << "Energy" << E << endl;
+
+
+
+//    mySystem.runMonteCarlo();
+
+    //PARALLIZATION ATTEMPTS:
+
+//    //    System clone;
+//    System clone0 = mySystem;
+//    System clone1 = mySystem;
+//    System clone2 = mySystem;
+//    System clone3 = mySystem;
+//    System clone4 = mySystem;
+//    System clone5 = mySystem;
+//    System clone6 = mySystem;
+//    System clone7 = mySystem;
+
+//    System clones[8];
+//    clones[0] = clone0;
+//    clones[1] = clone1;
+//    clones[2] = clone2;
+//    clones[3] = clone3;
+//    clones[4] = clone4;
+//    clones[5] = clone5;
+//    clones[6] = clone6;
+//    clones[7] = clone7;
+
+
+//    int l;
+//    #pragma omp parallel for
+//    for (l=0; l<8; ++l)
+//    {
+//        int N = omp_get_thread_num();
+////        cout << "i=" << l << endl;
+////        cout << "thread=" << N << endl;
+////        clones[N].initializePositions();
+////        cout << clones[N].getWavefunction()->getOldWavefunction() << endl;
+//        clones[N].runMonteCarlo();
+////        cout << clones[N].getEnergy() << endl;
+//    }
+
+//    int l;
+//    #pragma omp parallel for firstprivate(clones)
+//    for (l=0; l<2;++l)
+//    {
+//        int N = omp_get_thread_num();
+//        {
+//        clones[l].runMonteCarlo();
+//        }
+//    }
+
+////    clones[0].runMonteCarlo();
+//    cout << clones[0].getEnergy() << endl;
+
+//    mat E, E2, NA, V;
+//    #pragma omp parallel private(E,E2,V,NA)
+//    {
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone0.runMonteCarlo();
+//            E = clone0.getEnergy();
+//            E2 = clone0.getEnergySquared();
+//            V = clone0.getVariance();
+//            NA = clone0.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone1.runMonteCarlo();
+//            E = clone1.getEnergy();
+//            E2 = clone1.getEnergySquared();
+//            V = clone1.getVariance();
+//            NA = clone1.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone2.runMonteCarlo();
+//            E = clone2.getEnergy();
+//            E2 = clone2.getEnergySquared();
+//            V = clone2.getVariance();
+//            NA = clone2.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone3.runMonteCarlo();
+//            E = clone3.getEnergy();
+//            E2 = clone3.getEnergySquared();
+//            V = clone3.getVariance();
+//            NA = clone3.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone4.runMonteCarlo();
+//            E = clone4.getEnergy();
+//            E2 = clone4.getEnergySquared();
+//            V = clone4.getVariance();
+//            NA = clone4.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone5.runMonteCarlo();
+//            E = clone5.getEnergy();
+//            E2 = clone5.getEnergySquared();
+//            V = clone5.getVariance();
+//            NA = clone5.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone6.runMonteCarlo();
+//            E = clone6.getEnergy();
+//            E2 = clone6.getEnergySquared();
+//            V = clone6.getVariance();
+//            NA = clone6.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+
+//            #pragma omp single
+//            {
+//            cout << "thread no.: " << omp_get_thread_num() << ", executing MC" << endl;
+//            clone7.runMonteCarlo();
+//            E = clone7.getEnergy();
+//            E2 = clone7.getEnergySquared();
+//            V = clone7.getVariance();
+//            NA = clone7.getNumberOfAcceptedSteps();
+//            cout << "Energy" << E << endl;
+//            }
+//    }
 
 
 
