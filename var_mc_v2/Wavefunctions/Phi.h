@@ -1,9 +1,9 @@
 #pragma once
-#include "InteractingWavefunction.h"
+#include "TwoElectronsInteractingWavefunction.h"
 
 // WAVEFUNCTION:   WITHOUT E-E-REPULSION
 
-class Phi : public InteractingWavefunction
+class Phi : public TwoElectronsInteractingWavefunction
 {
 
 public:

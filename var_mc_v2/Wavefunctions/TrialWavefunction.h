@@ -13,7 +13,6 @@ protected:
     double  Alpha;
     double  Beta;
     double  Jastrow;
-    vec     rSingleParticle;
     mat     rij;
     vec     AlphaArray;
     vec     BetaArray;
@@ -28,15 +27,17 @@ public:
     ~TrialWavefunction();   // destructor
 
     virtual double  evaluateWavefunction(mat) = 0;
-    virtual void    constructSlaterMatrix() {}
+//    virtual void    constructSlaterMatrix() {}
 
     // GET:
     //-----
     int     getNumberOfDimensions()             {return NumberOfDimensions;}
     int     getNumberOfParticles()              {return NumberOfParticles;}
     double  getOldWavefunction()                {return OldWavefunction;}
-    vec     getrSingleParticle()                {return rSingleParticle;}
+    double  getBeta()                           {return Beta;}
     mat     getrij()                            {return rij;}
+    mat     getSlaterMatrixUp()                 {return SlaterMatrixUp;}
+    mat     getSlaterMatrixDown()               {return SlaterMatrixDown;}
 
     // SET:
     //-----
@@ -50,5 +51,4 @@ public:
     void    setOldWavefunction(double OldValue)                 {OldWavefunction = OldValue;}
     void    setA(mat inputA)                                    {a = inputA;}
     void    setN(mat inputN)                                    {n = inputN;}
-
 };

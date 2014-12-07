@@ -80,7 +80,7 @@
 //        {
 //            bool Accepted = newStep();
 //            if (Accepted){
-//                dx = TypeHamiltonian->evaluateLocalEnergy(OldPosition);
+//                dx = Hamiltonian->evaluateLocalEnergy(OldPosition);
 //                I += dx;
 //                I2 += dx*dx;
 //                NOA++;
@@ -107,6 +107,6 @@
 ////}
 
 ////void Metropolis::setHamiltonian(Hamiltonian *inputHamiltonian){
-////    TypeHamiltonian = inputHamiltonian;
-////    TypeHamiltonian->setTrialWavefunction(Wavefunction);
+////    Hamiltonian = inputHamiltonian;
+////    Hamiltonian->setTrialWavefunction(Wavefunction);
 ////}

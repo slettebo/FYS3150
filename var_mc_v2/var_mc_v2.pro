@@ -13,23 +13,28 @@ SOURCES += main.cpp \
     lib.cpp \
     System.cpp \
     Wavefunctions/TrialWavefunction.cpp \
-    Wavefunctions/NonInteractingWavefunction.cpp \
-    Wavefunctions/InteractingWavefunction.cpp \
     Hamiltonians/HarmonicOscillatorWithColoumb.cpp \
     Hamiltonians/Hamiltonian.cpp \
     Hamiltonians/HarmonicOscillatorWithoutCoulomb.cpp \
-    Hamiltonians/LocalEnergyClosedForm.cpp
+    Random/random.cpp \
+    Wavefunctions/TwoElectronsNonInteractingWavefunction.cpp \
+    Wavefunctions/TwoElectronsInteractingWavefunction.cpp \
+    Wavefunctions/SixElectronsNonInteractingWavefunction.cpp \
+    Wavefunctions/SixElectronsInteractingWavefunction.cpp
 
 
 HEADERS += \
     lib.h \
     System.h \
     Wavefunctions/TrialWavefunction.h \
-    Wavefunctions/NonInteractingWavefunction.h \
-    Wavefunctions/InteractingWavefunction.h \
     Hamiltonians/Hamiltonian.h \
     Hamiltonians/HarmonicOscillatorWithCoulomb.h \
     Hamiltonians/HarmonicOscillatorWithoutCoulomb.h \
-    Hamiltonians/LocalEnergyClosedForm.h
+    Random/random.h \
+    TwoElectronsNonInteractingWavefunction.h \
+    Wavefunctions/TwoElectronsNonInteractingWavefunction.h \
+    Wavefunctions/TwoElectronsInteractingWavefunction.h \
+    Wavefunctions/SixElectronsNonInteractingWavefunction.h \
+    Wavefunctions/SixElectronsInteractingWavefunction.h
 
 

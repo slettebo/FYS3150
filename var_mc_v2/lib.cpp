@@ -1365,9 +1365,9 @@ double ran2(long *idum)
       idum2 = (*idum);
       for(j = NTAB + 7; j >= 0; j--) {
          k     = (*idum)/IQ1;
-	 *idum = IA1*(*idum - k*IQ1) - k*IR1;
-	 if(*idum < 0) *idum +=  IM1;
-	 if(j < NTAB)  iv[j]  = *idum;
+     *idum = IA1*(*idum - k*IQ1) - k*IR1;
+     if(*idum < 0) *idum +=  IM1;
+     if(j < NTAB)  iv[j]  = *idum;
       }
       iy=iv[0];
    }
@@ -1383,6 +1383,7 @@ double ran2(long *idum)
    if(iy < 1) iy += IMM1;
    if((temp = AM*iy) > RNMX) return RNMX;
    else return temp;
+
 }
 #undef IM1
 #undef IM2

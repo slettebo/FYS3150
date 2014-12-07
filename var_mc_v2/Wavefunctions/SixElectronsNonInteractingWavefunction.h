@@ -3,13 +3,12 @@
 
 // WAVEFUNCTION:   WITHOUT E-E-REPULSION
 
-class NonInteractingWavefunction : public TrialWavefunction{
+class SixElectronsNonInteractingWavefunction : public TrialWavefunction{
 
 public:
-    NonInteractingWavefunction();   // constructor
+    SixElectronsNonInteractingWavefunction();   // constructor
 
     double  hermitePolynomial(int i, double z);
     double  evaluateWavefunction(mat r);
-    void    constructSlaterMatrix();
 };
 

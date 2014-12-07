@@ -1,14 +1,19 @@
-#include "NonInteractingWavefunction.h"
+#include "SixElectronsNonInteractingWavefunction.h"
 #include "lib.h"
 #include <armadillo>
 #include "omp.h"
 using namespace arma;
 
-NonInteractingWavefunction::NonInteractingWavefunction()
+SixElectronsNonInteractingWavefunction::SixElectronsNonInteractingWavefunction()
 {
+    NumberOfParticles = 6;
+    NumberOfDimensions = 2;
+    SlaterMatrix = mat(NumberOfParticles,NumberOfParticles);
+    SlaterMatrixUp = mat(NumberOfParticles/2,NumberOfParticles/2);
+    SlaterMatrixDown = mat(NumberOfParticles/2,NumberOfParticles/2);
 }
 
-double NonInteractingWavefunction::hermitePolynomial(int degree, double z)
+double SixElectronsNonInteractingWavefunction::hermitePolynomial(int degree, double z)
 {
     double H;
 
@@ -25,27 +30,14 @@ double NonInteractingWavefunction::hermitePolynomial(int degree, double z)
     return H;
 }
 
-double NonInteractingWavefunction::evaluateWavefunction(mat r)
+double SixElectronsNonInteractingWavefunction::evaluateWavefunction(mat r)
 {
-//    int i;
-//    double argument = 0;
-//    double wf = 0;
-
-////    #pragma omp parallel for
-//    for (i=0; i<NumberOfParticles; i++)
-//    {
-//        argument += dot(r.row(i).t(),r.row(i).t());
-//    }
-
-//    wf = exp(-Alpha*Omega*(argument)/2.0);
-//    return wf;
     int i,j,k;
     double value;
     double argument;
-    double rij;
+    double rSingleParticle;
     double x = 0;
     double y = 0;
-    rSingleParticle = vec(NumberOfParticles);
 
     // CALCULATING THE SLATER MATRICES FOR SPIN UP AND DOWN:
     // -----------------------------------------------------
@@ -58,21 +50,21 @@ double NonInteractingWavefunction::evaluateWavefunction(mat r)
 
         if (i < NumberOfParticles/2)
         {
-//            #pragma omp parallel for
+            // SPIN UP
             for (j=0; j<NumberOfParticles/2; j++)
             {
-                rSingleParticle(i) = dot(r.row(i).t(),r.row(i).t());
-                argument = exp(-Alpha*Omega*rSingleParticle(i)/2.0);
+                rSingleParticle = dot(r.row(i).t(),r.row(i).t());
+                argument = exp(-Alpha*Omega*rSingleParticle/2.0);
                 SlaterMatrixUp(i,j) = hermitePolynomial(n(j,0),x)*hermitePolynomial(n(j,1),y)*argument;
             }
         }
         else
         {
-//            #pragma omp parallel for
+            // SPIN DOWN
             for (k=NumberOfParticles/2; k<NumberOfParticles; k++)
             {
-                rSingleParticle(i) = dot(r.row(i).t(),r.row(i).t());
-                argument = exp(-Alpha*Omega*rSingleParticle(i)/2.0);
+                rSingleParticle = dot(r.row(i).t(),r.row(i).t());
+                argument = exp(-Alpha*Omega*rSingleParticle/2.0);
                 SlaterMatrixDown(i-NumberOfParticles/2,k-NumberOfParticles/2) = hermitePolynomial(n(k,0),x)*hermitePolynomial(n(k,1),y)*argument;
             }
         }
@@ -81,11 +73,4 @@ double NonInteractingWavefunction::evaluateWavefunction(mat r)
     value = det(SlaterMatrixUp)*det(SlaterMatrixDown);
     return value;
 
-}
-
-void NonInteractingWavefunction::constructSlaterMatrix()
-{
-    SlaterMatrix = mat(NumberOfParticles,NumberOfParticles);
-    SlaterMatrixUp = mat(NumberOfParticles/2,NumberOfParticles/2);
-    SlaterMatrixDown = mat(NumberOfParticles/2,NumberOfParticles/2);
 }

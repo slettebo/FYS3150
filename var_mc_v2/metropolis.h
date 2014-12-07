@@ -22,7 +22,7 @@
 ////    mat         NewPosition;
 
 ////    TrialWavefunction *Wavefunction;
-////    Hamiltonian *TypeHamiltonian;
+////    Hamiltonian *Hamiltonian;
 
 
 //public:

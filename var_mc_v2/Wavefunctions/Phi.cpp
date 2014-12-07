@@ -72,7 +72,7 @@ double Phi::evaluateWavefunction(mat r){
     }
 
     cout << "slater-det" << det(SlaterMatrixUp)*det(SlaterMatrixDown) << endl;
-    cout << "noninteracting" << NonInteractingWavefunction::evaluateWavefunction(r) << endl;
+    cout << "noninteracting" << NonTwoElectronsInteractingWavefunction::evaluateWavefunction(r) << endl;
 
     value = det(SlaterMatrixUp)*det(SlaterMatrixDown)*exp(jastrow);
     return value;

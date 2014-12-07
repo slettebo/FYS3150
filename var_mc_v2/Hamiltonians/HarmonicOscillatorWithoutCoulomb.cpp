@@ -8,20 +8,22 @@ HarmonicOscillatorWithoutCoulomb::HarmonicOscillatorWithoutCoulomb()
 void HarmonicOscillatorWithoutCoulomb::setTrialWavefunction(TrialWavefunction *inputWavefunction)
 {
     Wavefunction = inputWavefunction;
+    N = Wavefunction->getNumberOfParticles();
+    M = Wavefunction->getNumberOfDimensions();
 }
 
 double HarmonicOscillatorWithoutCoulomb::evaluateLocalEnergy(mat r)
 {
     // evaluate kinetic energy:
-    double e_kinetic = Hamiltonian::evaluateLocalEnergy(r);
+    e_kinetic = Hamiltonian::evaluateLocalEnergy(r);
 
     // evaluate potential energy:
-    double e_potential = 0;
+    e_potential = 0;
 
-    int i, j;
-    for (i=0; i<Wavefunction->getNumberOfParticles(); i++)
+    int i;
+    for (i=0; i<N; i++)
     {
-        e_potential += Wavefunction->getrSingleParticle()(i);
+        e_potential += dot(r.row(i).t(),r.row(i).t());
     }
 
     e_potential = 0.5*e_potential;

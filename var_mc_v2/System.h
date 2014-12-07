@@ -1,10 +1,13 @@
 #pragma once
 #include <armadillo>
+#include <vector>
+using std::vector;
 
 using namespace arma;
 
 class TrialWavefunction;
 class Hamiltonian;
+class Random;
 
 class System{
 private:
@@ -20,6 +23,7 @@ private:
     mat                 a;
     mat                 QuantumForceOld;
     mat                 QuantumForceNew;
+    Random              *Rnd;
 
     // HAMILTONIAN STUFF:
     Hamiltonian         *TypeHamiltonian;
@@ -35,12 +39,14 @@ private:
     mat                 Energy;
     mat                 EnergySquared;
     mat                 Variance;
+    mat                 AvgDistance;
 
 
 public:
     System();   // constructor
     System(const System& inputSystem); // copy constructor
     ~System();  // destructor
+
 
 
     // WAVEFUNCTION STUFF:
@@ -63,9 +69,10 @@ public:
     void    setOmega(double inputOmega)                         {Omega = inputOmega;}
     void    setAlpha(vec inputAlpha)                            {Alpha = inputAlpha;}
     void    setBeta(vec inputBeta)                              {Beta = inputBeta;}
-    void    setRandomSeed(long int inputRandomSeed)             {RandomSeed = inputRandomSeed;}
+    void    setRandomSeed(long int inputRandomSeed);
+
     void    setStepLength(double inputStepLength)               {StepLength = inputStepLength;}
-    void    initializePositions();
+    void    initializePositionsBruteForce();
 
     // RUN
     void    initializeMonteCarlo(int inputNumberOfCycles, int inputNumberOfVariations);
@@ -73,9 +80,10 @@ public:
     void    runMonteCarlo();
     double  gaussianDeviate(long int inputRandomSeed);
     void    importanceSampling();
-    void    initializePositionsImportance();
+    void    initializePositionsImportanceSampling();
     void    newStepImportance();
     void    quantumForce(mat r, mat &qforce, double wf);
+    void    quantumForceAnalytical(mat r, mat &qforce, double wf, int k);
 
     // CLASS INHERITANCE AND OTHER:
     void    setTrialWavefunction(TrialWavefunction* inputWavefunction);
