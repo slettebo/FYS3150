@@ -34,7 +34,9 @@ public:
     int     getNumberOfDimensions()             {return NumberOfDimensions;}
     int     getNumberOfParticles()              {return NumberOfParticles;}
     double  getOldWavefunction()                {return OldWavefunction;}
+    double  getAlpha()                          {return Alpha;}
     double  getBeta()                           {return Beta;}
+    double  getOmega()                          {return Omega;}
     mat     getrij()                            {return rij;}
     mat     getSlaterMatrixUp()                 {return SlaterMatrixUp;}
     mat     getSlaterMatrixDown()               {return SlaterMatrixDown;}

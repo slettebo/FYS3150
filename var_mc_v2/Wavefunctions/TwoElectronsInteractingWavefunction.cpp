@@ -16,5 +16,6 @@ double TwoElectronsInteractingWavefunction::evaluateWavefunction(mat r){
     r12 = norm(r.row(1).t() - r.row(0).t());
     Jastrow = exp(r12/(1.0 + Beta*r12));
     return noninteracting*Jastrow;
+
 }
 

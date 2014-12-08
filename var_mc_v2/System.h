@@ -20,7 +20,7 @@ private:
     TrialWavefunction   *Wavefunction;
     mat                 OldPosition;
     mat                 NewPosition;
-    mat                 a;
+    mat                 a_matrix;
     mat                 QuantumForceOld;
     mat                 QuantumForceNew;
     Random              *Rnd;
@@ -38,6 +38,10 @@ private:
     // PHYSICAL SYSTEM STUFF
     mat                 Energy;
     mat                 EnergySquared;
+    mat                 KineticEnergy;
+    mat                 KineticEnergySquared;
+    mat                 PotentialEnergy;
+    mat                 PotentialEnergySquared;
     mat                 Variance;
     mat                 AvgDistance;
 
@@ -59,6 +63,10 @@ public:
     vec     getBeta()                   {return Beta;}
     mat     getEnergy()                 {return Energy;}
     mat     getEnergySquared()          {return EnergySquared;}
+    mat     getKineticEnergy()          {return KineticEnergy;}
+    mat     getKineticEnergySquared()   {return KineticEnergySquared;}
+    mat     getPotentialEnergy()        {return PotentialEnergy;}
+    mat     getPotentialEnergySquared() {return PotentialEnergySquared;}
     mat     getVariance()               {return Variance;}
     mat     getNumberOfAcceptedSteps()  {return NumberOfAcceptedSteps;}
     mat     getOldPosition()            {return OldPosition;}

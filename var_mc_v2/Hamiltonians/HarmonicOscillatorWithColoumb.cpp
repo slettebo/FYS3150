@@ -10,6 +10,7 @@ void HarmonicOscillatorWithCoulomb::setTrialWavefunction(TrialWavefunction *inpu
     Wavefunction = inputWavefunction;
     N = Wavefunction->getNumberOfParticles();
     M = Wavefunction->getNumberOfDimensions();
+    omega = inputWavefunction->getOmega();
 }
 
 double HarmonicOscillatorWithCoulomb::evaluateLocalEnergy(mat r)
@@ -29,7 +30,8 @@ double HarmonicOscillatorWithCoulomb::evaluateLocalEnergy(mat r)
             e_potential_interacting += 1.0/rij;
         }
     }
-
+    e_kinetic = HarmonicOscillatorWithoutCoulomb::getKineticEnergy();
+    e_potential = e_potential_interacting + HarmonicOscillatorWithoutCoulomb::getPotentialEnergy();
     return e_kinetic_and_noninteracting + e_potential_interacting;
 }
 

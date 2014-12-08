@@ -13,6 +13,7 @@ protected:
     double e_potential;
     int N;
     int M;
+    double omega;
     TrialWavefunction* Wavefunction;
 
 public:
@@ -26,6 +27,11 @@ public:
     //-----
     double getKineticEnergy()       {return e_kinetic;}
     double getPotentialEnergy()     {return e_potential;}
+    TrialWavefunction* getWavefunction()    {return Wavefunction;}
+
+    // SET:
+    //-----
+
 
 };
 

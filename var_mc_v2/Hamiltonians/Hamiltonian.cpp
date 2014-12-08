@@ -8,6 +8,7 @@ Hamiltonian::Hamiltonian()
     M = 0;          // Number of dimensions
     e_kinetic = 0;
     e_potential = 0;
+    omega = 0;
 }
 
 Hamiltonian::~Hamiltonian()
@@ -42,7 +43,6 @@ double Hamiltonian::evaluateLocalEnergy(mat r)
                 r_minus(i,j) = r_plus(i,j) = r(i,j);
             }
     }
-
     // include electron mass and hbar squared and divide by wave function:
     e_kinetic = 0.5*h2*e_kinetic/Wavefunction->getOldWavefunction();
 
